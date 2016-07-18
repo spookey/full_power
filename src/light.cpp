@@ -21,21 +21,21 @@ uint8_t Light::_getB(uint32_t col) {
     return (col & 0x0000ff);
 }
 void Light::_write(uint8_t pin, uint16_t col) {
-    analogWrite(pin, _crunch(col));
+    analogWrite(pin, this->_crunch(col));
 }
 
 void Light::_set(uint8_t col_r, uint8_t col_g, uint8_t col_b) {
-    _write(pin_r, col_r); cur_r = col_r;
-    _write(pin_g, col_g); cur_g = col_g;
-    _write(pin_b, col_b); cur_b = col_b;
+    this->_write(pin_r, col_r); cur_r = col_r;
+    this->_write(pin_g, col_g); cur_g = col_g;
+    this->_write(pin_b, col_b); cur_b = col_b;
 }
 
 void Light::_fade(
     uint8_t col_r, uint8_t col_g, uint8_t col_b, unsigned long pause
 ) {
-    msg.log("Fade\t",
-        msg.color(cur_r, cur_g, cur_b), " > ",
-        msg.color(col_r, col_g, col_b)
+    this->msg.log("Fade\t",
+        this->msg.color(cur_r, cur_g, cur_b), " -> ",
+        this->msg.color(col_r, col_g, col_b)
     );
     uint8_t new_r = cur_r;
     uint8_t new_g = cur_g;
@@ -48,25 +48,25 @@ void Light::_fade(
         if (new_b < col_b) {new_b += 1;} else
         if (new_b > col_b) {new_b -= 1;}
         else {break;}
-        _set(new_r, new_g, new_b);
+        this->_set(new_r, new_g, new_b);
         delay(pause);
     };
 }
 
 void Light::flash(uint32_t col, unsigned long pause) {
-    msg.log("Flash\t",
-        msg.color(cur_r, cur_g, cur_b), " > ",
-        msg.color(col)
+    this->msg.log("Flash\t",
+        this->msg.color(cur_r, cur_g, cur_b), " -> ",
+        this->msg.color(col)
     );
     uint8_t old_r = cur_r;
     uint8_t old_g = cur_g;
     uint8_t old_b = cur_b;
-    set(col);
+    this->set(col);
     delay(pause);
-    _set(old_r, old_g, old_b);
+    this->_set(old_r, old_g, old_b);
 }
 
 void Light::flashTwice(uint32_t col, unsigned long pause) {
-    flash(col, pause); delay(pause);
-    flash(col, pause); delay(pause);
+    this->flash(col, pause); delay(pause);
+    this->flash(col, pause); delay(pause);
 }

@@ -11,6 +11,9 @@
 #define LIGHT_PWM_ON        0
 #define LIGHT_PWM_OFF       1023
 
+#define POWER_SEND_PIN      D5
+
 #define SERVE_NET_PORT      80
+#define SERVE_FAMILY        "01101"
 
 #endif

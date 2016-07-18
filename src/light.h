@@ -10,22 +10,28 @@ public:
         const Cable &msg, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b
     );
     void set(uint32_t col) {
-        _set(_getR(col), _getG(col), _getB(col));
+        this->_set(this->_getR(col), this->_getG(col), this->_getB(col));
     }
     void fade(uint32_t col, unsigned long pause = 5) {
-        _fade(_getR(col), _getG(col), _getB(col), pause);
+        this->_fade(
+            this->_getR(col), this->_getG(col), this->_getB(col), pause
+        );
     }
 
     void flash(uint32_t col = 0x000000, unsigned long pause = 100);
     void flashTwice(uint32_t col = 0x000000, unsigned long pause = 100);
 
     void initTune(void) {
-        fade(0xffffff, 1); flashTwice(0x000000, 20);
-        fade(0x000000, 1); flashTwice(0xffffff, 20);
+        this->fade(0xffffff, 1); this->flashTwice(0x000000, 20);
+        this->fade(0x000000, 1); this->flashTwice(0xffffff, 20);
     }
     uint32_t someColor(void) {
         return uint32_t(random(0x000000, 0xffffff));
     }
+    String currentColor(void) {
+        return this->msg.color(this->cur_r, this->cur_g, this->cur_b);
+    }
+
 private:
     Cable msg;
     uint8_t pin_r;

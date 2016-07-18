@@ -13,8 +13,12 @@ public:
     Cover(const Cable& msg, String ssid, String secret, String identifier);
     void dialup(void);
     void info(void);
-    uint32_t reconnects(void) {
-        return reconnectCount;
+
+    uint32_t getDialups(void) {
+        return this->dialupCount;
+    }
+    String getHostname(void) {
+        return WiFi.hostname();
     }
 
 private:
@@ -22,7 +26,7 @@ private:
     String ssid;
     String secret;
     String identifier;
-    uint32_t reconnectCount = 0;
+    uint32_t dialupCount = 0;
 };
 
 #endif
