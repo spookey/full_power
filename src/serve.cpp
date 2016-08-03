@@ -2,11 +2,14 @@
 
 #define STRING(...)   #__VA_ARGS__
 
-const String TEMPLATE_OUTER = String(
-#include "template_outer.html"
+const String TEMPLATE_ERROR = String(
+#include "template_error.html"
 );
 const String TEMPLATE_INNER = String(
 #include "template_inner.html"
+);
+const String TEMPLATE_OUTER = String(
+#include "template_outer.html"
 );
 
 
@@ -23,7 +26,7 @@ server(ESP8266WebServer(SERVE_NET_PORT))
     });
     this->server.onNotFound([this](){
         this->requestCount++;
-        this->server.send(404, "text/html", this->_load(""));
+        this->server.send(404, "text/html", this->_load(TEMPLATE_ERROR));
     });
 }
 
@@ -35,7 +38,8 @@ void Serve::setup(void) {
 }
 
 void Serve::loop(void) {
-    server.handleClient();
+    if (this->ticker++ == 0) { this->net.info(); }
+    this->server.handleClient();
 }
 
 void Serve::_action(void) {
@@ -70,7 +74,6 @@ void Serve::_action(void) {
     if (light.length() && color.length()) {
         const char* cc = color.c_str();
         uint32_t col = (uint32_t) strtoul(&cc[1], NULL, 16);
-        this->msg.log("#", String(col));
         if (
             light.equalsIgnoreCase("fade") ||
             light.equalsIgnoreCase("✎")
@@ -84,18 +87,22 @@ void Serve::_action(void) {
         } else {
             this->msg.log("Serve\tweird light command!");
             this->msg.log("     \tlight      '", light, "'");
-            this->msg.log("     \tcolor      '", color, "'");
+            this->msg.log("     \tcolor      '", color, "' | ", String(col));
         }
     }
 }
 
 String Serve::_load(String inner) {
     String response = TEMPLATE_OUTER;
-    inner.replace("__color__", this->msg.color(this->led.someColor()));
     inner.replace("__family__", SERVE_FAMILY);
-    response.replace("__color__", this->led.currentColor());
-    response.replace("__info__", this->msg.uptime());
+    inner.replace("__random_color__", this->msg.color(this->led.someColor()));
+    inner.replace("__uri__", this->server.uri());
+    response.replace("__current_color__", this->led.currentColor());
+    response.replace("__dialups__", String(this->net.getDialups()));
     response.replace("__inner__", inner);
+    response.replace("__requests__", String(this->requestCount));
+    response.replace("__signal__", this->net.getSignal());
     response.replace("__title__", this->net.getHostname());
+    response.replace("__uptime__", this->msg.uptime());
     return response;
 }

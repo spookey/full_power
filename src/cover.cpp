@@ -43,7 +43,7 @@ void Cover::info(void) {
     this->msg.log("     \tbssid      ", WiFi.BSSIDstr());
     this->msg.log("     \tmac        ", WiFi.macAddress());
     this->msg.log("     \tchannel    #", String(WiFi.channel()));
-    this->msg.log("     \tsignal     ", String(WiFi.RSSI()), " dBm");
+    this->msg.log("     \tsignal     ", this->getSignal());
     this->msg.log("     \t'", this->getHostname(), "'");
     this->msg.log("     \taddress    ", WiFi.localIP().toString());
     this->msg.log("     \tsubnet     ", WiFi.subnetMask().toString());

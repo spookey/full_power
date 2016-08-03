@@ -20,6 +20,9 @@ public:
     String getHostname(void) {
         return WiFi.hostname();
     }
+    String getSignal(void) {
+        return String(String(WiFi.RSSI()) + " dBm");
+    }
 
 private:
     Cable msg;

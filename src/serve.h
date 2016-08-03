@@ -25,6 +25,7 @@ private:
     Power pwr;
     ESP8266WebServer server;
     uint32_t requestCount = 0;
+    uint8_t ticker = 0;
 
     void _action(void);
     String _load(String inner);

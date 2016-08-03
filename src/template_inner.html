@@ -1,43 +1,27 @@
 STRING(
-<form method="get" class="row">
-    <h2>8</h2>
-    <input type="hidden" name="power" value="__family__01000"/>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2713;"/>
-    </div>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2717;"/>
-    </div>
-</form>
-<form method="get" class="row">
-    <h2>4</h2>
-    <input type="hidden" name="power" value="__family__00100"/>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2713;"/>
-    </div>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2717;"/>
-    </div>
-</form>
-<form method="get" class="row">
-    <h2>2</h2>
-    <input type="hidden" name="power" value="__family__00010"/>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2713;"/>
-    </div>
-    <div class="box">
-        <input type="submit" class="btn" name="state" value="&#x2717;"/>
-    </div>
-</form>
-<form method="get" class="row">
-    <h2>
-    <input type="color" name="color" value="__color__"/>
-    </h2>
-    <div class="box">
-        <input type="submit" class="btn" name="light" value="&#x270e;"/>
-    </div>
-    <div class="box">
-        <input type="submit" class="btn" name="light" value="&#x2605;"/>
-    </div>
-</form>
+    <form method="get" class="switch">
+        <div class="intro">8</div>
+        <input type="hidden" name="power" value="__family__01000"/>
+        <input type="submit" name="state" value="&#x2713;" class="elem"/>
+        <input type="submit" name="state" value="&#x2717;" class="elem"/>
+    </form>
+    <form method="get" class="switch">
+        <div class="intro">4</div>
+        <input type="hidden" name="power" value="__family__00100"/>
+        <input type="submit" name="state" value="&#x2713;" class="elem"/>
+        <input type="submit" name="state" value="&#x2717;" class="elem"/>
+    </form>
+    <form method="get" class="switch">
+        <div class="intro">2</div>
+        <input type="hidden" name="power" value="__family__00010"/>
+        <input type="submit" name="state" value="&#x2713;" class="elem"/>
+        <input type="submit" name="state" value="&#x2717;" class="elem"/>
+    </form>
+    <form method="get" action="" class="switch">
+        <div class="intro">
+            <input type="color" name="color" value="__random_color__"/>
+        </div>
+        <input type="submit" name="light" value="&#x270e;" class="elem"/>
+        <input type="submit" name="light" value="&#x2605;" class="elem"/>
+    </form>
 )
