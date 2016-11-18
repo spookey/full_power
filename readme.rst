@@ -27,10 +27,12 @@ To trigger actions, send some GET requests:
 
 
 For more information visit the `project description`_.
+This project is used in `master_control`_!
 
 The wiring is rather simple:
 
 .. image:: etc/schaltplan.png
     :align: center
 
-.. _project description: https://www.der-beweis.de/build/full_power/
+.. _project description: https://www.der-beweis.de/build/full_power
+.. _master_control: https://github.com/spookey/master_control
