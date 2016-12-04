@@ -5,6 +5,8 @@
 #include <cable.h>
 #include <cover.h>
 #include <light.h>
+#include <lookup_light.h>
+#include <compare_light.h>
 #include <power.h>
 #include <serve.h>
 

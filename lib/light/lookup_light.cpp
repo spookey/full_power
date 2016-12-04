@@ -1,12 +1,12 @@
-#include "light.h"
+#include "lookup_light.h"
 
-void light_setup(void) {
+void lookup_light_setup(void) {
     Serial.begin(115200); Serial.println("...");
     pinMode(LIGHT_LED_RR, OUTPUT);
     pinMode(LIGHT_LED_GG, OUTPUT);
     pinMode(LIGHT_LED_BB, OUTPUT);
     set_rgb(LIGHT_PWM_NULL);
-    Serial.println("light_setup done");
+    Serial.println("lookup_light_setup done");
 }
 
 void set_led(uint8_t pin, uint16_t val) { analogWrite(pin, val); }
@@ -46,11 +46,11 @@ void fade_linear(void (*func)(uint16_t)) {
 void fade_curve(void (*func)(uint16_t)) {
     Serial.println("fade_curve full");
     for (uint16_t val = 1024; val > 0; val--) {
-        func(curve[val]); delay(1);
+        func(lookup_curve[val]); delay(1);
     }
     Serial.println("fade_curve null");
     for (uint16_t val = 0; val < 1024; val++) {
-        func(curve[val]); delay(1);
+        func(lookup_curve[val]); delay(1);
     }
     set_rgb(LIGHT_PWM_NULL); delay(512);
     Serial.println("fade_curve done");
@@ -63,7 +63,7 @@ void demo(void (*func)(uint16_t)) {
     fade_curve(func); delay(512);
 }
 
-void light_loop(void) {
+void lookup_light_loop(void) {
     demo(set_r__);
     demo(set__g_);
     demo(set___b);
@@ -71,5 +71,5 @@ void light_loop(void) {
     demo(set_r_b);
     demo(set__gb);
     demo(set_rgb);
-    Serial.println("light_loop done");
+    Serial.println("lookup_light_loop done");
 }

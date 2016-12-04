@@ -4,26 +4,23 @@
 def main(
         batch_size=10,
         indent=' ' * 4,
-        input_size=1024,
+        input_size=0x0400,
         int_type='const static uint16_t',
-        output_size=1024,
-        table_name='curve',
+        output_size=0x0400,
+        table_name='lookup_curve',
 ):
     def _luminance(val):
-        val = float(val * 100.0)
+        val = float((val / input_size) * 100.0)
         if val <= 8:
-            return val / 902.3
-        return ((val + 16) / 116)**3
+            val = (val / 902.3)
+        else:
+            val = ((val + 16) / 116)**3
+        return round(val * output_size)
 
     def _batch(iterable, size=1):
         length = len(iterable)
         for idx in range(0, length, size):
             yield iterable[idx:min(idx + size, length)]
-
-    numbers = [
-        round(_luminance(val / input_size) * output_size)
-        for val in range(0, 1 + input_size)
-    ]
 
     res = list()
     res.append('// CIE1931 correction table')
@@ -34,7 +31,9 @@ def main(
         int_type=int_type,
         table_name=table_name,
     ))
-    for bat in _batch(numbers, size=batch_size):
+    for bat in _batch([
+            _luminance(val) for val in range(0, 1 + input_size)
+    ], size=batch_size):
         res.append('{indent}{line}'.format(
             indent=indent,
             line=' '.join('{val:5},'.format(val=val) for val in bat),
