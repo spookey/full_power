@@ -1,4 +1,8 @@
 #include "main.h"
 
-void setup(void) {}
-void loop(void) {}
+void setup(void) {
+    light_setup();
+}
+void loop(void) {
+    light_loop();
+}
