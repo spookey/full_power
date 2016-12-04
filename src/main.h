@@ -1,10 +1,12 @@
-#ifndef __main_h__
-#define __main_h__
+#ifndef __main_h_
+#define __main_h_
 
-#include "_init.h"
-#include "cable.h"
-#include "cover.h"
-#include "serve.h"
+#include <_init.h>
+#include <cable.h>
+#include <cover.h>
+#include <light.h>
+#include <power.h>
+#include <serve.h>
 
 void setup(void);
 void loop(void);

@@ -1,3 +1,6 @@
-.pioenvs
+!etc/schaltplan.png
 .clang_complete
 .gcc-flags.json
+.pioenvs
+.piolibdeps
+etc/
