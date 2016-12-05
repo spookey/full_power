@@ -9,6 +9,11 @@ void lookup_light_setup(void) {
     Serial.println("lookup_light_setup done");
 }
 
+uint16_t blow(uint8_t val) {
+    return map(val, 0x00, 0xff, LIGHT_PWM_NULL, LIGHT_PWM_FULL);
+}
+
+
 void set_led(uint8_t pin, uint16_t val) { analogWrite(pin, val); }
 void set_r__(uint16_t val) { set_led(LIGHT_LED_RR, val); }
 void set__g_(uint16_t val) { set_led(LIGHT_LED_GG, val); }
@@ -32,26 +37,30 @@ void blink(uint8_t times, void (*func)(uint16_t)) {
 
 void fade_linear(void (*func)(uint16_t)) {
     Serial.println("fade_linear full");
-    for (uint16_t val = LIGHT_PWM_NULL; val > LIGHT_PWM_FULL; val--) {
-        func(val); delay(1);
-    }
+    uint8_t val = 0x00; do {
+        func(blow(val)); delay(2);
+    } while (val++ != 0xff);
+
     Serial.println("fade_linear null");
-    for (uint16_t val = LIGHT_PWM_FULL; val < LIGHT_PWM_NULL; val++) {
-        func(val); delay(1);
-    }
+    val = 0xff; do {
+        func(blow(val)); delay(2);
+    } while (val--);
+
     set_rgb(LIGHT_PWM_NULL); delay(512);
     Serial.println("fade_linear done");
 }
 
 void fade_curve(void (*func)(uint16_t)) {
     Serial.println("fade_curve full");
-    for (uint16_t val = 1024; val > 0; val--) {
-        func(lookup_curve[val]); delay(1);
-    }
+    uint8_t val = 0x00; do {
+        func(lookup_curve[val]); delay(2);
+    } while (val++ != 0xff);
+
     Serial.println("fade_curve null");
-    for (uint16_t val = 0; val < 1024; val++) {
-        func(lookup_curve[val]); delay(1);
-    }
+    val = 0xff; do {
+        func(lookup_curve[val]); delay(2);
+    } while (val--);
+
     set_rgb(LIGHT_PWM_NULL); delay(512);
     Serial.println("fade_curve done");
 }

@@ -8,6 +8,6 @@
 #define LIGHT_LED_GG    D2
 #define LIGHT_LED_BB    D1
 #define LIGHT_PWM_FULL  0
-#define LIGHT_PWM_NULL  1024
+#define LIGHT_PWM_NULL  1023
 
 #endif

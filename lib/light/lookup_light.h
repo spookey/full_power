@@ -4,6 +4,7 @@
 #include "light.h"
 
 void lookup_light_setup(void);
+uint16_t blow(uint8_t val);
 
 void set_led(uint8_t pin, uint16_t val);
 void set___b(uint16_t val);

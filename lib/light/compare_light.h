@@ -4,9 +4,9 @@
 #include "light.h"
 #include "lookup_light.h"
 
-static uint16_t gen_curve[1025] = {0};
+static uint16_t gen_curve[1 + 0xff];
 
-uint16_t luminance_step(uint16_t val, uint16_t inputSize, uint16_t outputSize);
+uint16_t luminance_step(uint8_t val);
 void setup_curve(uint16_t* the_curve);
 
 void compare_light_setup(void);

@@ -4,9 +4,9 @@
 def main(
         batch_size=10,
         indent=' ' * 4,
-        input_size=0x0400,
+        input_size=0x00ff,
         int_type='const static uint16_t',
-        output_size=0x0400,
+        output_size=0x03ff,
         table_name='lookup_curve',
 ):
     def _luminance(val):
@@ -32,7 +32,7 @@ def main(
         table_name=table_name,
     ))
     for bat in _batch([
-            _luminance(val) for val in range(0, 1 + input_size)
+            _luminance(val) for val in reversed(range(0, 1 + input_size))
     ], size=batch_size):
         res.append('{indent}{line}'.format(
             indent=indent,
