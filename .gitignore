@@ -1,9 +1,8 @@
+.pioenvs
 .clang_complete
 .gcc-flags.json
-.pioenvs
 .piolibdeps
 /etc/*
 /lib/*/etc/*
-
 !/etc/schaltplan.png
 !/lib/light/etc/curve.py
