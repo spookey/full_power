@@ -25,15 +25,14 @@ void Light::Glare::generate(void) {
     uint16_t val;
     uint8_t idx = 0x00;
     do {
-        val = this->luminance(idx);
-        this->curve[0xff - idx] = val;
+        this->chroma[0xff - idx] = this->luminance(idx);
     } while (idx++ != 0xff);
 }
 
 void Light::Glare::set(Color col) {
-    analogWrite(this->rr, this->curve[col.rr]);
-    analogWrite(this->gg, this->curve[col.gg]);
-    analogWrite(this->bb, this->curve[col.bb]);
+    analogWrite(this->rr, this->chroma[col.rr]);
+    analogWrite(this->gg, this->chroma[col.gg]);
+    analogWrite(this->bb, this->chroma[col.bb]);
     this->led.color = col;
 }
 

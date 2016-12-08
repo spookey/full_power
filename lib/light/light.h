@@ -28,7 +28,7 @@ private:
     struct Glare {
         Light& led;
         uint8_t rr; uint8_t gg; uint8_t bb;
-        uint16_t curve[1 + 0xff];
+        uint16_t chroma[1 + 0xff];
 
         Glare(Light& led, uint8_t rr, uint8_t gg, uint8_t bb);
         uint16_t luminance(uint8_t val);
@@ -54,7 +54,6 @@ public:
     void flash(String text, uint8_t num=2, unsigned long pause=128) {
         this->flash(this->parse(text), num, pause);
     }
-
 };
 
 #endif

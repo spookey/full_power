@@ -3,10 +3,10 @@
 Cable::Cable(unsigned long baud, SerialConfig conf)
 : baud(baud), conf(conf) {}
 
-
 void Cable::setup(void) {
     Serial.begin(this->baud, this->conf);
-    do { delay(0.25); } while (!Serial); Serial.println();
+    do { delay(0.25); } while (!Serial);
+    this->text(this->fill(0xff), false);
     this->log("cable", "setup done");
 }
 void Cable::loop(void) {}

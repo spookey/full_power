@@ -2,6 +2,7 @@
 #define _cable_h_
 
 #include <_init.h>
+#include <shell.h>
 
 class Cable {
 public:
