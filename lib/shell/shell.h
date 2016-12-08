@@ -30,7 +30,7 @@ private:
     struct Commands {
         Cable& txt;
         uint8_t index;
-        Command* items[CABLE_PROMPT_COUNT];
+        Command* items[SHELL_PROMPT_COUNT];
 
         Commands(Cable& txt);
         bool append(Command& command);
@@ -41,11 +41,11 @@ private:
         Shell& cmd;
         Cable& txt;
         uint8_t index;
-        char buffer[1 + CABLE_PROMPT_BUFFER];
+        char buffer[1 + SHELL_PROMPT_BUFFER];
 
         Prompt(Shell& cmd, Cable& txt);
         void intro(void);
-        void remove(uint8_t len=1);
+        void remove(uint8_t num=1);
         void collect(char data);
         void enter(void);
     };

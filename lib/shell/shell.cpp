@@ -12,20 +12,23 @@ Shell::Commands::Commands(Cable& txt)
 Shell::Prompt::Prompt(Shell& cmd, Cable& txt)
 : cmd(cmd), txt(txt), index(0) {}
 
-void Shell::setup(void) {}
+void Shell::setup(void) {
+    this->txt.log("shell", "setup done");
+}
 
 void Shell::Prompt::intro(void) {
     this->index = 0;
     this->txt.text(this->txt.pad("\nC:\\>", false, 6), false);
 }
-void Shell::Prompt::remove(uint8_t len) {
-    do {
+void Shell::Prompt::remove(uint8_t num) {
+    for (; num; num--) {
         if (this->index > 0) {
             this->txt.raw(SHELL_KEY_BACKSPACE);
             this->txt.raw(SHELL_KEY_SPACE);
             this->txt.raw(SHELL_KEY_BACKSPACE);
+            this->index--;
         }
-    } while(len--);
+    }
 }
 void Shell::Prompt::collect(char data) {
     if (data > 31 && data < 127) {
@@ -96,13 +99,13 @@ bool Shell::append(String name, String help, int8_t (*reply)(String)) {
 void Shell::loop(void) {
     char typed = this->txt.collect();
     switch (typed) {
-        case CABLE_KEY_ENTER:
+        case SHELL_KEY_ENTER:
             this->prompt.enter();
             break;
-        case CABLE_KEY_ESCAPE:
+        case SHELL_KEY_ESCAPE:
             this->prompt.remove(this->prompt.index);
             break;
-        case CABLE_KEY_BACKSPACE:
+        case SHELL_KEY_BACKSPACE:
             this->prompt.remove();
             break;
         default:

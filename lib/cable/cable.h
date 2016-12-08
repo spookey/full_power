@@ -21,7 +21,6 @@ public:
 
     void sos(unsigned long wait=2048);
 
-
 private:
     unsigned long baud;
     SerialConfig conf;

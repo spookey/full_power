@@ -7,6 +7,7 @@ Cable::Cable(unsigned long baud, SerialConfig conf)
 void Cable::setup(void) {
     Serial.begin(this->baud, this->conf);
     do { delay(0.25); } while (!Serial); Serial.println();
+    this->log("cable", "setup done");
 }
 void Cable::loop(void) {}
 
