@@ -11,12 +11,16 @@ void Cable::setup(void) {
 }
 void Cable::loop(void) {}
 
-void Cable::text(String text, bool nwl) {
-    (nwl ? Serial.println(text) : Serial.print(text)); Serial.flush();
+char Cable::collect(void) {
+    int val = Serial.read();
+    if (val < 0) { return '\0'; }
+    return (char) val;
 }
 void Cable::raw(char data) { Serial.write(data); }
 void Cable::raw(int data) { Serial.write(data); }
-char Cable::collect(void) { return Serial.read(); }
+void Cable::text(String text, bool nwl) {
+    (nwl ? Serial.println(text) : Serial.print(text)); Serial.flush();
+}
 
 String Cable::join(String tx_a, String tx_b) {
     tx_a.reserve(tx_a.length() + tx_b.length());

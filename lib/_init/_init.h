@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-#define CABLE_BAUD          115200
-#define CABLE_CONF          SERIAL_8N1
+#define CABLE_BAUDRT        115200
+#define CABLE_CONFIG        SERIAL_8N1
 
 #define LIGHT_LED_BB        D1
 #define LIGHT_LED_GG        D2

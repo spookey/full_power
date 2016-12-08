@@ -2,7 +2,6 @@
 #define _cable_h_
 
 #include <_init.h>
-#include <shell.h>
 
 class Cable {
 public:
@@ -10,12 +9,14 @@ public:
     void setup(void);
     void loop(void);
 
-    void log(String name, String text);
-    void llg(String name, String text);
-    void text(String text, bool nwl=false);
+    char collect(void);
     void raw(char data);
     void raw(int data);
-    char collect(void);
+    void text(String text, bool nwl=false);
+
+    void log(String name, String text);
+    void llg(String name, String text);
+
     String join(String tx_a, String tx_b);
     String pad(String text, bool pre=true, uint8_t wdt=8,
             char fchr=' ', char schr='.');
