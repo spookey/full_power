@@ -11,16 +11,17 @@ install:
     - pip install -U platformio
 
 script:
-    - platformio ci src \
-        -l lib/_init \
-        -l lib/cable \
-        -l lib/cover \
-        -l lib/light \
-        -l lib/power \
-        -l lib/serve \
-        -l lib/shell \
-        -b esp12e \
-        -b esp07 \
-        -b nodemcu \
-        -b nodemcuv2 \
+    - >
+        platformio ci src
+        -l lib/_init
+        -l lib/cable
+        -l lib/cover
+        -l lib/light
+        -l lib/power
+        -l lib/serve
+        -l lib/shell
+        -b esp12e
+        -b esp07
+        -b nodemcu
+        -b nodemcuv2
         -b wifinfo
