@@ -10,4 +10,8 @@
 #define LIGHT_LED_GG        D2
 #define LIGHT_LED_RR        D3
 
+#define SHELL_PROMPT        64
+#define SHELL_PREFIX        "C:\\>"
+#define SHELL_PRELEN        6
+
 #endif
