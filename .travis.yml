@@ -20,8 +20,12 @@ script:
         -l lib/power
         -l lib/serve
         -l lib/shell
-        -b esp12e
+        -l lib/store
+        -b d1 
+        -b d1_mini
         -b esp07
+        -b esp12e
+        -b esp_wroom_02
         -b nodemcu
         -b nodemcuv2
         -b wifinfo

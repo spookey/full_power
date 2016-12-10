@@ -4,7 +4,6 @@
 #include <_init.h>
 #include <cable.h>
 
-#define SHELL_CMDLEN        16
 #define _CODE_BACKSP        8
 #define _CODE_ESCAPE        27
 #define _CODE_FILLER        32
@@ -14,8 +13,12 @@
 class Shell {
 public:
     Shell(Cable& txt);
-    void setup(void);
     void loop(void);
+
+protected:
+    Cable& txt;
+    uint8_t c_idx = 0; /* registered command counter */
+    uint8_t p_idx = 0; /* prompt input counter */
 
 private:
     struct Command {
@@ -34,7 +37,9 @@ private:
             return (obj->*fnc)(text);
         }
     };
+
     bool add(Command& cmd);
+
 public:
     template<typename T>
     bool add(T *base, uint8_t (T::*ident)(String),
@@ -47,20 +52,16 @@ public:
         cmd->help = help;
         return this->add(*cmd);
     }
-private:
-    Cable& txt;
 
+private:
     void help(void);
     void launch(String line);
-    uint8_t c_idx = 0;
-    Command* items[SHELL_CMDLEN];
+    Command* items = new Command[SHELL_CMDLEN];
 
     void _intro(void);
     void _remove(uint8_t num=1);
     void _collect(char data);
     void _enter(void);
-
-    uint8_t p_idx = 0;
     char input[1 + SHELL_PROMPT];
 };
 

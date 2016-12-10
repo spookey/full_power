@@ -3,16 +3,19 @@
 
 #include <_init.h>
 #include <cable.h>
+#include <shell.h>
 
 class Light {
 public:
-    Light(Cable& txt, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b);
+    Light(Cable& txt, Shell& exe, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b);
     void setup(void);
     void loop(void);
 
-private:
+protected:
     Cable& txt;
+    Shell& exe;
 
+private:
     struct Color {
         uint8_t rr; uint8_t gg; uint8_t bb;
 

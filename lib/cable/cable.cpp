@@ -6,13 +6,11 @@ Cable::Cable(unsigned long baud, SerialConfig conf)
 void Cable::setup(void) {
     Serial.begin(this->baud, this->conf);
     do { delay(0.25); } while (!Serial);
-    this->text(this->fill(0xff), false);
-    this->log("cable", "setup done");
+    this->text(this->fill(0xff, '.'), true);
 }
-void Cable::loop(void) {}
 
 char Cable::collect(void) {
-    int val = Serial.read();
+    int16_t val = Serial.read();
     if (val < 0) { return '\0'; }
     return (char) val;
 }
@@ -33,7 +31,7 @@ String Cable::fill(uint8_t wdt, char chr) {
 }
 String Cable::pad(String text, bool pre, uint8_t wdt, char fchr, char schr) {
     if (wdt <= 2) { return this->fill(wdt, schr); }
-    const uint8_t len = text.length();
+    const uint32_t len = text.length();
     if (wdt >= len) {
         String fill = this->fill(wdt - len, fchr);
         return (pre ? this->join(fill, text) : this->join(text, fill));
@@ -49,14 +47,16 @@ void Cable::llg(String name, String text) {
     this->text(this->join(this->pad(name, true, 16), ": ", text), true);
 }
 
-void Cable::sos(unsigned long wait) {
+void Cable::sos(String reason, unsigned long wait) {
     String dit = this->join(this->fill(255), this->fill(255));
     String dah = this->join(dit, dit, dit, dit);
-    for (uint8_t idx = 0; idx <= 2; idx++) {
-        for (uint8_t _ = 0; _ <= 2; _++) {
-            this->text((idx == 1) ? dah : dit, true); delay(512);
+    for (;;) {
+        for (uint8_t idx = 0; idx <= 2; idx++) {
+            for (uint8_t _ = 0; _ <= 2; _++) {
+                this->text((idx == 1) ? dah : dit, true); delay(512);
+            }
+            delay(512);
         }
-        delay(512);
+        this->log("cable", "alarm"); this->llg("reason", reason); delay(wait);
     }
-    delay(wait);
 }

@@ -2,11 +2,11 @@
 
 Cable txt = Cable(CABLE_BAUDRT, CABLE_CONFIG);
 Shell exe = Shell(txt);
-Light led = Light(txt, LIGHT_LED_RR, LIGHT_LED_GG, LIGHT_LED_BB);
+Light led = Light(txt, exe, LIGHT_LED_RR, LIGHT_LED_GG, LIGHT_LED_BB);
 
 struct Stuff {
     uint8_t uptime(String text) {
-        txt.log("_main", "uptime");
+        txt.log("stuff", "uptime");
         txt.llg("millis", String(millis()));
         return 0;
     }
@@ -26,16 +26,9 @@ Stuff com = Stuff(exe);
 
 void setup(void) {
     txt.setup();
-    exe.setup();
     led.setup();
-
-    exe.add(&led, &Light::cmd_flash, "flash", "flash light in given color");
-    exe.add(&led, &Light::cmd_fade, "fade", "flade light to given color");
-    txt.log("_main", "setup done");
 }
 
 void loop(void) {
-    txt.loop();
     exe.loop();
-    led.loop();
 }

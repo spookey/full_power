@@ -7,8 +7,12 @@ class Cable {
 public:
     Cable(unsigned long baud, SerialConfig conf);
     void setup(void);
-    void loop(void);
 
+protected:
+    unsigned long baud;
+    SerialConfig conf;
+
+public:
     char collect(void);
     void raw(char data);
     void raw(int data);
@@ -21,12 +25,9 @@ public:
     String pad(String text, bool pre=true, uint8_t wdt=8,
             char fchr=' ', char schr='.');
 
-    void sos(unsigned long wait=2048);
+    void sos(String reason, unsigned long wait=2048);
 
 private:
-    unsigned long baud;
-    SerialConfig conf;
-
     String fill(uint8_t wdt=8, char chr=' ');
 
 public:

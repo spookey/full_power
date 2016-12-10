@@ -1,7 +1,7 @@
 #include "light.h"
 
-Light::Light(Cable& txt, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b)
-: txt(txt), glare(*this, pin_r, pin_g, pin_b), color() {}
+Light::Light(Cable& txt, Shell& exe, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b)
+: txt(txt), exe(exe), glare(*this, pin_r, pin_g, pin_b), color() {}
 
 Light::Color::Color(uint8_t rr, uint8_t gg, uint8_t bb)
 : rr(rr), gg(gg), bb(bb) {}
@@ -41,7 +41,9 @@ void Light::setup(void) {
     pinMode(this->glare.gg, OUTPUT);
     pinMode(this->glare.bb, OUTPUT);
     this->glare.set(this->color);
-    this->txt.log("light", "setup done");
+
+    this->exe.add(this, &Light::cmd_flash, "flash", "flash light in color");
+    this->exe.add(this, &Light::cmd_fade, "fade", "fade light to color");
 }
 
 String Light::Color::show(void) {
@@ -102,6 +104,3 @@ void Light::flash(Color col, uint8_t num, unsigned long pause) {
         this->glare.set(tmp); delay(pause);
     }
 }
-
-
-void Light::loop(void) {}

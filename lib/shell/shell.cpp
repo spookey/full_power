@@ -3,22 +3,20 @@
 Shell::Shell(Cable& txt)
 : txt(txt) {}
 
-void Shell::setup(void) { this->txt.log("shell", "setup done"); }
-
-bool Shell::add(Command& command) {
+bool Shell::add(Command& cmd) {
     for (uint8_t idx = 0; idx < SHELL_CMDLEN; idx++) {
-        if (this->items[idx] == &command) { return true; }
+        if (&this->items[idx] == &cmd) { return true; }
     }
     if (this->c_idx < SHELL_CMDLEN) {
-        this->items[this->c_idx] = &command;
+        this->items[this->c_idx] = cmd;
         this->c_idx++;
         return true;
     }
 }
 void Shell::help(void) {
-    this->txt.log("avail", "commands");
+    this->txt.log("shell", "commands");
     for (uint8_t idx = 0; idx < this->c_idx; idx++) {
-        this->txt.llg(this->items[idx]->name, this->items[idx]->help);
+        this->txt.llg(this->items[idx].name, this->items[idx].help);
     }
     this->txt.llg("anything else", "this help");
 }
@@ -26,16 +24,14 @@ void Shell::launch(String line) {
     String progname, arguments;
     uint8_t code = 1;
     for (uint8_t idx = 0; idx < this->c_idx; idx++) {
-        progname = this->items[idx]->name;
+        progname = this->items[idx].name;
         if (progname == line.substring(0, progname.length())) {
             arguments = line.substring(1 + progname.length(), line.length());
             arguments.trim();
-            code = this->items[idx]->call(arguments);
+            code = this->items[idx].call(arguments);
             if (code == 0) { return; }
             this->txt.log("shell", this->txt.join("\'", line, "\'"));
-            this->txt.llg("error", this->txt.join(
-                String(code, DEC), " / 0x", String(code, HEX)
-            ));
+            this->txt.llg("error", String(code, DEC));
             return;
         }
     }
