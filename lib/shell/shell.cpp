@@ -58,7 +58,7 @@ void Shell::_collect(char data) {
     if (data > 31 && data < 127) {
         if (this->p_idx < SHELL_PROMPT) {
             this->input[this->p_idx] = data;
-            this->input[1 + this->p_idx] = '\0';
+            this->input[1 + this->p_idx] = _CHAR_IGNORE;
             this->p_idx++;
             this->txt.raw(data);
             this->txt.raw(_CODE_BACKSP);

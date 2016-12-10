@@ -4,6 +4,7 @@ Cable txt = Cable(CABLE_BAUDRT, CABLE_CONFIG);
 Shell exe = Shell(txt);
 Store ini = Store(txt, exe, STORE_CONFIG);
 Light led = Light(txt, exe, LIGHT_LED_RR, LIGHT_LED_GG, LIGHT_LED_BB);
+Cover net = Cover(txt, exe, ini);
 
 struct Stuff {
     uint8_t uptime(String text) {
@@ -28,9 +29,11 @@ Stuff com = Stuff(exe);
 void setup(void) {
     txt.setup();
     ini.setup();
+    net.setup();
     led.setup();
 }
 
 void loop(void) {
     exe.loop();
+    net.loop();
 }

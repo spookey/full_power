@@ -104,3 +104,14 @@ void Light::flash(Color col, uint8_t num, unsigned long pause) {
         this->glare.set(tmp); delay(pause);
     }
 }
+
+uint8_t Light::cmd_fade(String text) {
+    if (text.length() > 0) { this->fade(text); }
+    else { this->fade(); }
+    return 0;
+}
+uint8_t Light::cmd_flash(String text) {
+    if (text.length() > 0) { this->flash(text, 2); }
+    else { this->flash(2); }
+    return 0;
+}

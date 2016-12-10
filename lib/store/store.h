@@ -1,10 +1,11 @@
 #ifndef _flash_h_
 #define _flash_h_
 
+#include <FS.h>
+
 #include <_init.h>
 #include <cable.h>
 #include <shell.h>
-#include <FS.h>
 
 class Store {
 public:

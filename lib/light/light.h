@@ -41,6 +41,9 @@ private:
     Color color;
     Glare glare;
 
+    uint8_t cmd_fade(String text);
+    uint8_t cmd_flash(String text);
+
     void fade(Color col, unsigned long pause=16);
     void flash(Color col, uint8_t num=2, unsigned long pause=128);
 
@@ -58,16 +61,6 @@ public:
         this->flash(this->parse(text), num, pause);
     }
 
-    uint8_t cmd_fade(String text) {
-        if (text.length() > 0) { this->fade(text); }
-        else { this->fade(); }
-        return 0;
-    }
-    uint8_t cmd_flash(String text) {
-        if (text.length() > 0) { this->flash(text, 2); }
-        else { this->flash(2); }
-        return 0;
-    }
 };
 
 #endif

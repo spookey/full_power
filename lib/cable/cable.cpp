@@ -11,7 +11,7 @@ void Cable::setup(void) {
 
 char Cable::collect(void) {
     int16_t val = Serial.read();
-    if (val < 0) { return '\0'; }
+    if (val < 0) { return _CHAR_IGNORE; }
     return (char) val;
 }
 void Cable::raw(char data) { Serial.write(data); }
@@ -47,10 +47,10 @@ void Cable::llg(String name, String text) {
     this->text(this->join(this->pad(name, true, 16), ": ", text), true);
 }
 
-void Cable::sos(String reason, unsigned long wait) {
+void Cable::sos(String reason, bool forever, unsigned long wait) {
     String dit = this->join(this->fill(255), this->fill(255));
     String dah = this->join(dit, dit, dit, dit);
-    for (;;) {
+    while (forever || this->collect() != _CHAR_IGNORE) {
         for (uint8_t idx = 0; idx <= 2; idx++) {
             for (uint8_t _ = 0; _ <= 2; _++) {
                 this->text((idx == 1) ? dah : dit, true); delay(512);

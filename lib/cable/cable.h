@@ -21,14 +21,12 @@ public:
     void log(String name, String text);
     void llg(String name, String text);
 
+    String fill(uint8_t wdt=8, char chr=' ');
     String join(String tx_a, String tx_b);
     String pad(String text, bool pre=true, uint8_t wdt=8,
             char fchr=' ', char schr='.');
 
-    void sos(String reason, unsigned long wait=2048);
-
-private:
-    String fill(uint8_t wdt=8, char chr=' ');
+    void sos(String reason, bool forever=true, unsigned long wait=2048);
 
 public:
     String join(String tx_a, String tx_b, String tx_c) {

@@ -4,12 +4,6 @@
 #include <_init.h>
 #include <cable.h>
 
-#define _CODE_BACKSP        8
-#define _CODE_ESCAPE        27
-#define _CODE_FILLER        32
-#define _CODE_IGNORE        0
-#define _CODE_RETURN        13
-
 class Shell {
 public:
     Shell(Cable& txt);

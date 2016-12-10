@@ -4,12 +4,13 @@ Store::Store(Cable& txt, Shell& exe, String filename)
 : txt(txt), exe(exe), filename(filename) {}
 
 void Store::setup(void) {
-    if (!SPIFFS.begin()) { this->txt.sos("flash error"); }
-    this->exe.add(this, &Store::cmd_confdrop, "confdrop", "drop config file");
-    this->exe.add(this, &Store::cmd_confdump, "confdump", "config -> file");
-    this->exe.add(this, &Store::cmd_confload, "confload", "file -> config");
-    this->exe.add(this, &Store::cmd_confshow, "confshow", "show config file");
-    this->exe.add(this, &Store::cmd_conf, "conf", "config tool");
+    if (!SPIFFS.begin()) { this->txt.sos("flash error", true); }
+    this->load();
+    this->exe.add(this, &Store::cmd_confdrop, "cdrop", "drop config file");
+    this->exe.add(this, &Store::cmd_confdump, "cdump", "config -> file");
+    this->exe.add(this, &Store::cmd_confload, "cload", "file -> config");
+    this->exe.add(this, &Store::cmd_confshow, "cshow", "show config file");
+    this->exe.add(this, &Store::cmd_conf, "conf", "config utility");
 }
 
 bool Store::dump(bool action) {
