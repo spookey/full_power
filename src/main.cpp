@@ -2,6 +2,7 @@
 
 Cable txt = Cable(CABLE_BAUDRT, CABLE_CONFIG);
 Shell exe = Shell(txt);
+Store ini = Store(txt, exe, STORE_CONFIG);
 Light led = Light(txt, exe, LIGHT_LED_RR, LIGHT_LED_GG, LIGHT_LED_BB);
 
 struct Stuff {
@@ -26,6 +27,7 @@ Stuff com = Stuff(exe);
 
 void setup(void) {
     txt.setup();
+    ini.setup();
     led.setup();
 }
 

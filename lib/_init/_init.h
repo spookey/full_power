@@ -15,4 +15,8 @@
 #define SHELL_PRELEN        6
 #define SHELL_PROMPT        64
 
+#define STORE_CONFIG        "/config_file"
+#define STORE_INILEN        8
+#define STORE_RASTER        16
+
 #endif

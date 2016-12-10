@@ -8,6 +8,7 @@
 #include <power.h>
 #include <serve.h>
 #include <shell.h>
+#include <store.h>
 
 void setup(void);
 void loop(void);
