@@ -6,7 +6,7 @@ Cable::Cable(unsigned long baud, SerialConfig conf)
 void Cable::setup(void) {
     Serial.begin(this->baud, this->conf);
     do { delay(0.25); } while (!Serial);
-    this->text(this->fill(0xff, '.'), true);
+    this->text(this->fill(0xff, '^'), true);
 }
 
 char Cable::collect(void) {

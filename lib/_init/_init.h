@@ -16,6 +16,11 @@
 #define LIGHT_LED_GG        D2
 #define LIGHT_LED_RR        D3
 
+#define POWER_FAMILY        "01101"
+#define POWER_REPEAT        10
+#define POWER_SWITCH        3               // how many switches to reserve
+#define POWER_TX_PIN        D5
+
 #define SERVE_HARBOR        80              // the port :)
 
 #define SHELL_CMDLEN        16              // how many commands may be added

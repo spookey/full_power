@@ -1,1 +1,100 @@
 #include "power.h"
+
+Power::Power (Cable& txt, Shell& exe, Store& ini, uint8_t pin)
+: txt(txt), exe(exe), ini(ini), pin(pin) {}
+
+void Power::setup(void) {
+    pinMode(this->pin, OUTPUT); digitalWrite(this->pin, LOW);
+    this->list();
+    this->exe.add(this, &Power::cmd_full, "full", "full power");
+    this->exe.add(this, &Power::cmd_null, "null", "null power");
+    this->exe.add(this, &Power::cmd_sock, "sock", "list sockets");
+}
+
+void Power::burst(FullPower power) {
+    digitalWrite(this->pin, HIGH); delayMicroseconds(power.hi * this->sndlen);
+    digitalWrite(this->pin, LOW);  delayMicroseconds(power.lo * this->sndlen);
+    this->txt.text(".", false);
+}
+
+void Power::send(const char* word) {
+    unsigned long code = 0;
+    uint8_t length = 0;
+    for (const char* w = word; *w; w++) {
+        code <<= 2l;
+        switch(*w) {
+            case '0': break;
+            case 'F': code |= 1L; break;
+            case '1': code |= 3L; break;
+        }
+        length += 2;
+    }
+    for (uint8_t _ = 0; _ < this->repeat; _++) {
+        for (int16_t len = length-1; len >= 0; len--) {
+            if (code & (1L << len)) { this->burst(this->_one); }
+            else { this->burst(this->_zer); }
+        }
+        this->burst(this->_syn);
+    }
+    this->txt.text(" . . .", true);
+}
+
+void Power::full(const char* address, bool power) {
+    static char res[13];
+    uint8_t pos = 0;
+    for (uint8_t idx = 0; idx < 10; idx++) {
+        res[pos++] = (address[idx] == '0') ? 'F' : '0';
+    }
+    res[pos++] = power ? '0' : 'F'; res[pos++] = power ? 'F' : '0';
+    res[pos++] = _CHAR_IGNORE;
+    this->txt.log("power", (power ? "full" : "null"));
+    this->txt.llg("address", address);
+    this->txt.llg("package", res);
+    this->send(res);
+}
+
+String Power::key(uint8_t num) {
+    if (num >= POWER_SWITCH) { return ""; }
+    char res[10]; sprintf(res, "power_%03d", num);
+    return String(res);
+}
+String Power::address(uint8_t num, bool brief) {
+    String pref = this->ini.get("power_family", POWER_FAMILY, true);
+    String addr = this->ini.get(this->key(num), "11111", true);
+    if (brief || !addr.length()) { return addr; }
+    return this->txt.join(pref, addr);
+}
+String Power::name(uint8_t num) {
+    String addr = this->address(num, true);
+    uint32_t res = 0;
+    for (uint8_t idx = 0; idx < addr.length(); idx++) {
+        if (addr.charAt(idx) == '1') { res += pow(2, idx); }
+    }
+    return String(res, DEC);
+}
+String Power::look(String name) {
+    if (!name.length() || name != String(name.toInt())) { return ""; }
+    for (uint8_t idx = 0; idx < POWER_SWITCH; idx++) {
+        if (this->name(idx) == name) { return this->address(idx); }
+    }
+    return "";
+}
+void Power::list(void) {
+    this->txt.log("power", "socket list");
+    for (uint8_t idx = 0; idx < POWER_SWITCH; idx++) {
+        this->txt.llg(":", "#", String(idx), " ::");
+        this->txt.llg("name", this->name(idx));
+        this->txt.llg("key", this->key(idx));
+        this->txt.llg("address", this->address(idx, false));
+    }
+}
+
+uint8_t Power::cmd_full(String text) {
+    if (!text.length()) { return 1; } String addr = this->look(text);
+    this->full((!addr.length() ? text : addr).c_str(), true); return 0;
+}
+uint8_t Power::cmd_null(String text) {
+    if (!text.length()) { return 1; } String addr = this->look(text);
+    this->full((!addr.length() ? text : addr).c_str(), false); return 0;
+}
+uint8_t Power::cmd_sock(String _) { this->list(); return 0; }

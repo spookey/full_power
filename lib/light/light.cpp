@@ -40,8 +40,7 @@ void Light::setup(void) {
     pinMode(this->glare.rr, OUTPUT);
     pinMode(this->glare.gg, OUTPUT);
     pinMode(this->glare.bb, OUTPUT);
-    this->glare.set(this->color);
-
+    this->glare.set(Color(0, 0, 0)); this->flash(128, 2); this->fade(8);
     this->exe.add(this, &Light::cmd_flash, "flash", "flash light in color");
     this->exe.add(this, &Light::cmd_fade, "fade", "fade light to color");
 }
@@ -51,8 +50,6 @@ String Light::Color::show(void) {
     sprintf(res, "#%02x%02x%02x", this->rr, this->gg, this->bb);
     return String(res);
 }
-
-
 Light::Color Light::parse(unsigned long value) {
     return Color(
         ((value & 0xff0000) >> 0x10),
@@ -106,12 +103,10 @@ void Light::flash(Color col, uint8_t num, unsigned long pause) {
 }
 
 uint8_t Light::cmd_fade(String text) {
-    if (text.length() > 0) { this->fade(text); }
-    else { this->fade(); }
+    if (!text.length()) { this->fade(); } else { this->fade(text); }
     return 0;
 }
 uint8_t Light::cmd_flash(String text) {
-    if (text.length() > 0) { this->flash(text, 2); }
-    else { this->flash(2); }
+    if (!text.length()) { this->flash(2); } else { this->flash(text, 2); }
     return 0;
 }

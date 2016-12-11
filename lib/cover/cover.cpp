@@ -75,9 +75,8 @@ bool Cover::apply(void) {
 
 void Cover::status(void) {
     this->txt.log("cover", "status");
-    this->txt.llg(
-        "dial- / hangups", String(this->dialups), " / ", String(this->hangups)
-    );
+    this->txt.llg("dialups", String(this->dialups));
+    this->txt.llg("hangups", String(this->hangups));
     if (!WiFi.isConnected()) {
         this->txt.llg("status", "disconnected!"); return;
     }
@@ -102,7 +101,7 @@ void Cover::lookup(void) {
     if (!query) { this->txt.llg("no results", "sorry"); return; }
     this->txt.llg("results", String(query));
     for (uint16_t idx = 0; idx < query; idx++) {
-        this->txt.llg("-> #", String(idx + 1));
+        this->txt.llg(":",  "#", String(idx + 1), " ::");
         this->txt.llg("hostname", String(MDNS.hostname(idx)));
         this->txt.llg("address", MDNS.IP(idx).toString());
         this->txt.llg("port", String(MDNS.port(idx)));

@@ -95,6 +95,7 @@ bool Store::unpickle(String line) {
 }
 
 bool Store::add(String key, String val) {
+    key.trim(); if (!key.length()) { return false; }
     if (this->set(key, val)) { return true; }
     if (this->index < STORE_INILEN) {
         this->items[this->index] = Blob({key, val});
@@ -118,7 +119,7 @@ String Store::get(String key, String fallback, bool create) {
             return this->items[idx].val;
         }
     }
-    if (create) { this->add(key, fallback); }
+    if (create) { if (!this->add(key, fallback)) { return ""; }}
     return fallback;
 }
 

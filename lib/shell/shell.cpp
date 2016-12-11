@@ -19,6 +19,8 @@ void Shell::help(void) {
         this->txt.llg(this->items[idx].name, this->items[idx].help);
     }
     this->txt.llg("anything else", "this help");
+    this->txt.llg("items", String(this->c_idx));
+    this->txt.llg("free", String(SHELL_CMDLEN - this->c_idx));
 }
 void Shell::launch(String line) {
     String progname, arguments;
@@ -69,7 +71,7 @@ void Shell::_collect(char data) {
 void Shell::_enter(void) {
     String line;
     if (this->p_idx > 0) { line = this->input; line.trim(); }
-    if (line.length() > 0) { this->launch(line); }
+    if (!!line.length()) { this->launch(line); }
     this->_intro();
 }
 
