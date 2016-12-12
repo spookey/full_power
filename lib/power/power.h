@@ -47,4 +47,5 @@ public:
         this->full(this->address(num).c_str(), power);
     }
 };
+
 #endif

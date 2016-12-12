@@ -29,7 +29,7 @@
 #define SHELL_PROMPT        64              // characters to capture
 
 #define STORE_CONFIG        "/config_file"  // config filename
-#define STORE_INILEN        8               // how many values may be stored
+#define STORE_INILEN        16              // how many values may be stored
 #define STORE_RASTER        16              // width of key & value in text
 
 #define _CHAR_IGNORE        '\0'
@@ -37,5 +37,6 @@
 #define _CODE_ESCAPE        27
 #define _CODE_FILLER        32
 #define _CODE_RETURN        13
+#define _INCL_STRING(...)   #__VA_ARGS__
 
 #endif

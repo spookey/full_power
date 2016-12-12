@@ -65,12 +65,7 @@ String Power::address(uint8_t num, bool brief) {
     return this->txt.join(pref, addr);
 }
 String Power::name(uint8_t num) {
-    String addr = this->address(num, true);
-    uint32_t res = 0;
-    for (uint8_t idx = 0; idx < addr.length(); idx++) {
-        if (addr.charAt(idx) == '1') { res += pow(2, idx); }
-    }
-    return String(res, DEC);
+    return String(strtoul(this->address(num, true).c_str(), nullptr, 2), DEC);
 }
 String Power::look(String name) {
     if (!name.length() || name != String(name.toInt())) { return ""; }
@@ -84,6 +79,7 @@ void Power::list(void) {
     for (uint8_t idx = 0; idx < POWER_SWITCH; idx++) {
         this->txt.llg(":", "#", String(idx), " ::");
         this->txt.llg("name", this->name(idx));
+        this->txt.llg("short", this->address(idx, true));
         this->txt.llg("key", this->key(idx));
         this->txt.llg("address", this->address(idx, false));
     }

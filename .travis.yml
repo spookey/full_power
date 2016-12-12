@@ -10,6 +10,11 @@ cache:
 install:
     - pip install -U platformio
 
+before_script:
+    - >
+        ./lib/serve/etc/conv.py -f
+        test.html
+
 script:
     - >
         platformio ci src
@@ -21,7 +26,7 @@ script:
         -l lib/serve
         -l lib/shell
         -l lib/store
-        -b d1 
+        -b d1
         -b d1_mini
         -b esp07
         -b esp12e
