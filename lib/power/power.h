@@ -8,7 +8,7 @@
 
 class Power {
 public:
-    Power(Cable& txt, Shell& exe, Store& ini, uint8_t pin);
+    Power(Cable& txt, Shell& exe, Store& ini);
     void setup(void);
 
 protected:
@@ -18,7 +18,7 @@ protected:
 
 private:
     struct FullPower { uint8_t hi; uint8_t lo; };
-    uint8_t pin;
+    uint8_t pin = POWER_TX_PIN;
     uint8_t repeat = POWER_REPEAT;
     uint16_t sndlen = 350;
     FullPower _one = FullPower({3, 1});
@@ -30,7 +30,6 @@ private:
 
     String key(uint8_t num);
     String address(uint8_t num, bool brief=false);
-    String look(String name);
     void list(void);
 
     uint8_t cmd_full(String text);
@@ -39,12 +38,10 @@ private:
 
 public:
     String name(uint8_t num);
+    String look(String name);
 
     void full(String address, bool power) {
         this->full(address.c_str(), power);
-    }
-    void full(uint8_t num, bool power) {
-        this->full(this->address(num).c_str(), power);
     }
 };
 

@@ -19,11 +19,13 @@ void Shell::help(void) {
         this->txt.llg(this->items[idx].name, this->items[idx].help);
     }
     this->txt.llg("anything else", "this help");
+    this->txt.llg(":", "#", String(this->launched), " ::");
     this->txt.llg("items", String(this->c_idx));
     this->txt.llg("free", String(SHELL_CMDLEN - this->c_idx));
 }
 void Shell::launch(String line) {
     String progname, arguments;
+    this->launched++;
     uint8_t code = 1;
     for (uint8_t idx = 0; idx < this->c_idx; idx++) {
         progname = this->items[idx].name;

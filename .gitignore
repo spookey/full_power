@@ -5,3 +5,4 @@
 /etc/*
 !/etc/schaltplan.png
 /lib/readme.txt
+/lib/serve/etc

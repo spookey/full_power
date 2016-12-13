@@ -7,7 +7,7 @@
 
 class Light {
 public:
-    Light(Cable& txt, Shell& exe, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b);
+    Light(Cable& txt, Shell& exe);
     void setup(void);
     void loop(void);
 
@@ -30,10 +30,12 @@ private:
 
     struct Glare {
         Light& led;
-        uint8_t rr; uint8_t gg; uint8_t bb;
+        uint8_t rr = LIGHT_LED_RR;
+        uint8_t gg = LIGHT_LED_GG;
+        uint8_t bb = LIGHT_LED_BB;
         uint16_t chroma[1 + 0xff];
 
-        Glare(Light& led, uint8_t rr, uint8_t gg, uint8_t bb);
+        Glare(Light& led);
         uint16_t luminance(uint8_t val);
         void generate(void);
         void set(Color col);
@@ -61,6 +63,7 @@ public:
         this->flash(this->parse(text), num, pause);
     }
 
+    String get_color(void) { return this->color.show(); }
 };
 
 #endif

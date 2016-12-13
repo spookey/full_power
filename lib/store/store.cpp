@@ -1,7 +1,7 @@
 #include "store.h"
 
-Store::Store(Cable& txt, Shell& exe, String filename)
-: txt(txt), exe(exe), filename(filename) {}
+Store::Store(Cable& txt, Shell& exe)
+: txt(txt), exe(exe) {}
 
 void Store::setup(void) {
     if (!SPIFFS.begin()) { this->txt.sos("flash error", true); }

@@ -13,6 +13,7 @@ protected:
     Cable& txt;
     uint8_t c_idx = 0; /* registered command counter */
     uint8_t p_idx = 0; /* prompt input counter */
+    uint16_t launched = 0;
 
 private:
     struct Command {
@@ -57,6 +58,9 @@ private:
     void _collect(char data);
     void _enter(void);
     char input[1 + SHELL_PROMPT];
+
+public:
+    uint16_t get_launched(void) { return this->launched; }
 };
 
 #endif

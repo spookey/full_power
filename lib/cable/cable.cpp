@@ -1,10 +1,7 @@
 #include "cable.h"
 
-Cable::Cable(unsigned long baud, SerialConfig conf)
-: baud(baud), conf(conf) {}
-
 void Cable::setup(void) {
-    Serial.begin(this->baud, this->conf);
+    Serial.begin(CABLE_BAUDRT, CABLE_CONFIG);
     do { delay(0.25); } while (!Serial);
     this->text(this->fill(0xff, '^'), true);
 }
@@ -59,4 +56,18 @@ void Cable::sos(String reason, bool forever, unsigned long wait) {
         }
         this->log("cable", "alarm"); this->llg("reason", reason); delay(wait);
     }
+}
+
+String Cable::get_uptime(void) {
+    unsigned long sec = millis() / 1000;
+    unsigned long min = sec / 60;
+    unsigned long hrs = min / 60;
+    unsigned long day = hrs / 24;
+    sec = sec - (min * 60);
+    min = min - (hrs * 60);
+    hrs = hrs - (day * 24);
+    char res[16];
+    if (day >= 1) { sprintf(res, "%dd %02d:%02d:%02d", day, hrs, min, sec); }
+    else { sprintf(res, "%02d:%02d:%02d", hrs, min, sec); }
+    return String(res);
 }

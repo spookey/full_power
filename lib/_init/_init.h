@@ -22,6 +22,7 @@
 #define POWER_TX_PIN        D5
 
 #define SERVE_HARBOR        80              // the port :)
+#define SERVE_UPDATE        120000          // background refresh each ms
 
 #define SHELL_CMDLEN        16              // how many commands may be added
 #define SHELL_PREFIX        "C:\\>"

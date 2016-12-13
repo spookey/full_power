@@ -5,12 +5,8 @@
 
 class Cable {
 public:
-    Cable(unsigned long baud, SerialConfig conf);
+    Cable(void) {}
     void setup(void);
-
-protected:
-    unsigned long baud;
-    SerialConfig conf;
 
 public:
     char collect(void);
@@ -27,6 +23,7 @@ public:
             char fchr=' ', char schr='.');
 
     void sos(String reason, bool forever=true, unsigned long wait=2048);
+    String get_uptime(void);
 
 public:
     String join(String tx_a, String tx_b, String tx_c) {

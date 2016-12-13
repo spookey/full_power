@@ -1,0 +1,120 @@
+* { margin: 0; padding: 0; border: 0 none; }
+body {
+    font-family: "Helvetica Neue", Helvetica,
+        "Lucida Sans UNicode", "Lucida Grande",
+        Verdana, Arial, sans-serif;
+    font-size:  16px;
+    color: black;
+    background-color: #7f7f7f;
+}
+.line {
+    align-content: space-around;
+    align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    margin: 2rem .5rem 2rem .5rem;
+    text-align: center;
+}
+.line:first-of-type {
+    margin-top: 0;
+    margin-bottom: 3.5rem;
+    text-align: left;
+}
+.line:last-of-type {
+    margin-bottom: 0;
+}
+.spacing {
+    margin-top: 3.5rem;
+}
+.s-info,
+.viewer,
+.switch input,
+.switch slider {
+    padding: .5rem 0 .5rem 0;
+}
+
+.line,
+.viewer,
+.s-info,
+.switch input,
+.slider input[type=range],
+.slider input[type=range]::-webkit-slider-thumb {
+    border-radius: .25rem;
+}
+
+.header {
+    flex: 0 1 75%;
+}
+.h-info {
+    flex: 0 1 24%;
+    align-self: flex-end;
+}
+.switch {
+    flex: 0 1 45%;
+}
+.slider {
+    flex: 0 1 90%;
+}
+.viewer,
+.s-info {
+    flex:  0 1 9%;
+    align-self: baseline;
+}
+
+.label,
+.switch input {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.value,
+.h-info {
+    font-size: .8rem;
+}
+
+.header a {
+    text-decoration: none;
+}
+.viewer,
+.s-info,
+.line:first-of-type,
+.header a,
+.footer {
+    background-color: black;
+    color: white;
+}
+
+.slider input,
+.switch input {
+    background-color: white;
+    color: black;
+    width: 100%;
+}
+
+.slider input,
+.switch input,
+.slider input[type=range]::-webkit-slider-thumb,
+.slider input[type=range]::-webkit-slider-runnable-track {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+.slider input[type=range]::-webkit-slider-thumb {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: black;
+    cursor: pointer;
+}
+.switch input[type=button],
+.slider input[type=range],
+.slider input[type=range]::-webkit-slider-thumb {
+    border: 1px solid black;
+}
+.rrr {
+    background-color: red;
+}
+.ggg {
+    background-color: green;
+}
+.bbb {
+    background-color: blue;
+}

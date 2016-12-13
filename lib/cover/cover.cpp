@@ -84,9 +84,9 @@ void Cover::status(void) {
     this->txt.llg("ssid", WiFi.SSID());
     this->txt.llg("bssid", WiFi.BSSIDstr());
     this->txt.llg("mac", WiFi.macAddress());
-    this->txt.llg("channel", "#", String(WiFi.channel()));
-    this->txt.llg("signal", String(WiFi.RSSI()), " dBm");
-    this->txt.llg(":",  WiFi.hostname(), " ::");
+    this->txt.llg("channel", this->get_channel());
+    this->txt.llg("signal", this->get_signal());
+    this->txt.llg(":",  this->get_hostname(), " ::");
     this->txt.llg("address", WiFi.localIP().toString());
     this->txt.llg("subnet", WiFi.subnetMask().toString());
     this->txt.llg("gateway", WiFi.gatewayIP().toString());
@@ -126,5 +126,11 @@ uint8_t Cover::cmd_dialup(String _) {
 uint8_t Cover::cmd_hangup(String _) {
     this->repeat = 0; return (this->hangup() ? 0 : 1);
 }
-uint8_t Cover::cmd_lookup(String _) { this->lookup(); return 0; }
-uint8_t Cover::cmd_status(String _) { this->status(); return 0; }
+
+String Cover::get_hostname(void) { return WiFi.hostname(); }
+String Cover::get_signal(void) {
+    return this->txt.join(String(WiFi.RSSI()), " dBm");
+}
+String Cover::get_channel(void) {
+    return this->txt.join("#", String(WiFi.channel()));
+}

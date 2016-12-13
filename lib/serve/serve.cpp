@@ -1,20 +1,159 @@
 #include "serve.h"
 
-const String SERVE_TEST = String(
-#include "test.html"
+const String SERVE_BASIC = String(
+#include "etc/_basic.html"
+);
+const String SERVE_FUNCT = String(
+#include "etc/_funct.js"
+);
+const String SERVE_STYLE = String(
+#include "etc/_style.css"
+);
+const String SERVE_PLUGS = String(
+#include "etc/_plugs.html"
 );
 
-Serve::Serve(Cable& txt, Light& led, Power& ray)
-: txt(txt), led(led), ray(ray) {}
+Serve::Serve(Cable& txt, Shell& exe, Cover& net, Light& led, Power& ray)
+: txt(txt), exe(exe), net(net), led(led), ray(ray) {
+    this->srv.addHandler(new Index(*this));
+}
+
+Serve::Json::Json(Cable& txt)
+: txt(txt) {}
+
+Serve::Index::Index(Serve& web)
+: web(web) {}
 
 void Serve::setup(void) {
-    this->srv.on("/", [this](){
-        this->requests++;
-        String result = SERVE_TEST;
-        result.replace("__req__", String(this->requests));
-        this->srv.send(200, "text/html", result);
-    });
     this->srv.begin();
+    this->exe.add(this, &Serve::cmd_stats, "stats", "system statistics");
 }
 void Serve::loop(void) { this->srv.handleClient(); }
 
+String Serve::Json::show(void) {
+    return this->txt.join("{", this->store, "}");
+}
+void Serve::Json::add(String key, String val, bool raw) {
+    String res = (this->store.length() ? ", " : "");
+    res += this->txt.join("\"", key, "\": ");
+    res += (raw ? val : this->txt.join("\"", val, "\""));
+    this->store += res;
+    if (this->verbose) { this->txt.llg(key, val); }
+}
+
+String Serve::index(void) {
+    String plugs, pltpl;
+    for (uint8_t idx = 0; idx < POWER_SWITCH; idx++) {
+        pltpl = SERVE_PLUGS;
+        pltpl.replace("__plugname__", this->ray.name(idx));
+        plugs += pltpl;
+    }
+    String resp = SERVE_BASIC;
+    resp.replace("__style__", SERVE_STYLE);
+    resp.replace("__funct__", SERVE_FUNCT);
+    resp.replace("__plugs__", plugs);
+    resp.replace("__hostname__", this->net.get_hostname());
+    resp.replace("__update__", String(SERVE_UPDATE));
+    resp.replace("__status__", this->stats());
+    return resp;
+}
+String Serve::light(String text, bool fade) {
+    Json resp = Json(this->txt);
+    text.replace("%23", "#");
+    if (fade) {
+        (text.length() ? this->led.fade(text) : this->led.fade());
+    } else {
+        (text.length() ? this->led.flash(text) : this->led.flash());
+    }
+    resp.add("action", (fade ? "fade" : "flash"));
+    resp.add("color", text);
+    resp.add("status", "ok");
+    return resp.show();
+}
+String Serve::power(String text, bool full) {
+    Json resp = Json(this->txt);
+    String addr = this->ray.look(text);
+    this->ray.full((!addr.length() ? text : addr), full);
+    resp.add("action", (full ? "full" : "null"));
+    resp.add("address", addr);
+    resp.add("status", "ok");
+    return resp.show();
+}
+String Serve::stats(void) {
+    Json resp = Json(this->txt); resp.verbose = true;
+    resp.add("color", this->led.get_color());
+    resp.add("dialups", this->net.get_dialups());
+    resp.add("hangups", this->net.get_hangups());
+    resp.add("launched", this->exe.get_launched());
+    resp.add("requests", this->requests);
+    resp.add("channel", this->net.get_channel());
+    resp.add("signal", this->net.get_signal());
+    resp.add("uptime", this->txt.get_uptime());
+    return resp.show();
+}
+
+
+bool Serve::Index::canHandle(HTTPMethod meth, String req) {
+    if (meth != HTTP_GET) { return false; } req.trim();
+    if (req == this->_index || req == this->_stats) { return true; }
+    if (req.startsWith(this->_light)) {
+        return (
+            req.startsWith(this->web.txt.join(this->_light, "fade/")) ||
+            req.startsWith(this->web.txt.join(this->_light, "flash/"))
+        );
+    }
+    if (req.startsWith(this->_power)) {
+        return (
+            req.startsWith(this->web.txt.join(this->_power, "full/")) ||
+            req.startsWith(this->web.txt.join(this->_power, "null/"))
+        );
+    }
+    return false;
+}
+bool Serve::Index::handle(ESP8266WebServer &srv, HTTPMethod meth, String req) {
+    this->web.requests++; req.trim();
+    this->web.txt.log("serve", req);
+    this->web.txt.llg("#", String(this->web.requests));
+
+    if (req == this->_stats) {
+        srv.send(200, "application/json", this->web.stats()); return true;
+    }
+    if (req == this->_index) {
+        srv.send(200, "text/html", this->web.index()); return true;
+    }
+    if (req.startsWith(this->_light)) {
+        String part = req.substring(this->_light.length(), req.length());
+        bool fade = part.startsWith("fade");
+        String text = part.substring((fade ?  5 : 6), part.length());
+        srv.send(200, "application/json", this->web.light(text, fade));
+        return true;
+    }
+    if (req.startsWith(this->_power)) {
+        String part = req.substring(this->_power.length(), req.length());
+        bool full = part.startsWith("full");
+        String text = part.substring(5, part.length());
+        if (text.length()) {
+            srv.send(200, "application/json", this->web.power(text, full));
+            return true;
+        }
+    }
+    return false;
+}
+
+uint8_t Serve::cmd_stats(String text) {
+    this->txt.log("serve", "stats");
+    if (text.length()) {
+        this->txt.llg("VCC", String(ESP.getVcc()));
+        this->txt.llg("MHz", String(ESP.getCpuFreqMHz()));
+        this->txt.llg("chip id", String(ESP.getChipId()));
+        this->txt.llg("flash id", String(ESP.getFlashChipId()));
+        this->txt.llg("core version", ESP.getCoreVersion());
+        this->txt.llg("boot version", String(ESP.getBootVersion()));
+        this->txt.llg("free heap", String(ESP.getFreeHeap()));
+        this->txt.llg("free sketch", String(ESP.getFreeSketchSpace()));
+        this->txt.llg("sketch", String(ESP.getSketchSize()));
+        this->txt.llg("reset raeson", ESP.getResetReason());
+    }
+    this->stats();
+    return 0;
+}

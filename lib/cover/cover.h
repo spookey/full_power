@@ -33,8 +33,14 @@ private:
     void lookup(void);
     uint8_t cmd_dialup(String _);
     uint8_t cmd_hangup(String _);
-    uint8_t cmd_lookup(String _);
-    uint8_t cmd_status(String _);
+    uint8_t cmd_lookup(String _) { this->lookup(); return 0; }
+    uint8_t cmd_status(String _) { this->status(); return 0; }
+public:
+    String get_hostname(void);
+    String get_signal(void);
+    String get_channel(void);
+    uint16_t get_dialups(void) { return this->dialups; }
+    uint16_t get_hangups(void) { return this->hangups; }
 };
 
 #endif

@@ -1,15 +1,15 @@
 #include "light.h"
 
-Light::Light(Cable& txt, Shell& exe, uint8_t pin_r, uint8_t pin_g, uint8_t pin_b)
-: txt(txt), exe(exe), glare(*this, pin_r, pin_g, pin_b), color() {}
+Light::Light(Cable& txt, Shell& exe)
+: txt(txt), exe(exe), glare(*this), color() {}
 
 Light::Color::Color(uint8_t rr, uint8_t gg, uint8_t bb)
 : rr(rr), gg(gg), bb(bb) {}
 Light::Color::Color()
 : rr(0x00), gg(0x00), bb(0x00) {}
 
-Light::Glare::Glare(Light& led, uint8_t rr, uint8_t gg, uint8_t bb)
-: led(led), rr(rr), gg(gg), bb(bb) { this->generate(); }
+Light::Glare::Glare(Light& led)
+: led(led) { this->generate(); }
 
 uint16_t Light::Glare::luminance(uint8_t val) {
     float value = ((val / ((float) 0xff)) * 100.0);

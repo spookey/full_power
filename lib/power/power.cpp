@@ -1,7 +1,7 @@
 #include "power.h"
 
-Power::Power (Cable& txt, Shell& exe, Store& ini, uint8_t pin)
-: txt(txt), exe(exe), ini(ini), pin(pin) {}
+Power::Power (Cable& txt, Shell& exe, Store& ini)
+: txt(txt), exe(exe), ini(ini) {}
 
 void Power::setup(void) {
     pinMode(this->pin, OUTPUT); digitalWrite(this->pin, LOW);

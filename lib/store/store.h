@@ -9,13 +9,13 @@
 
 class Store {
 public:
-    Store(Cable& txt, Shell& exe, String filename);
+    Store(Cable& txt, Shell& exe);
     void setup(void);
 
 protected:
     Cable& txt;
     Shell& exe;
-    String filename;
+    String filename = STORE_CONFIG;
 
 private:
     struct Blob {String key; String val; };

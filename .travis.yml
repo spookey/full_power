@@ -11,9 +11,7 @@ install:
     - pip install -U platformio
 
 before_script:
-    - >
-        ./lib/serve/etc/conv.py -f
-        test.html
+    - ./.conv.py -f
 
 script:
     - >
