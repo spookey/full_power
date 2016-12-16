@@ -19,11 +19,11 @@ script:
         -l lib/_init
         -l lib/cable
         -l lib/cover
+        -l lib/flash
         -l lib/light
         -l lib/power
         -l lib/serve
         -l lib/shell
-        -l lib/store
         -b d1
         -b d1_mini
         -b esp07
