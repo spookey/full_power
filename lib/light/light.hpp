@@ -1,9 +1,9 @@
-#ifndef _light_h_
-#define _light_h_
+#ifndef _light_hpp_
+#define _light_hpp_
 
-#include <_init.h>
-#include <cable.h>
-#include <shell.h>
+#include <_init.hpp>
+#include <cable.hpp>
+#include <shell.hpp>
 
 class Light {
 public:
@@ -26,13 +26,13 @@ private:
 
     Color parse(unsigned long value);
     Color parse(String text);
-    Color some(void);
+    Color some(void) { return this->parse(abs(RANDOM_REG32)); }
 
     struct Glare {
         Light& led;
-        uint8_t rr = LIGHT_LED_RR;
-        uint8_t gg = LIGHT_LED_GG;
-        uint8_t bb = LIGHT_LED_BB;
+        const uint8_t rr = LIGHT_LED_RR;
+        const uint8_t gg = LIGHT_LED_GG;
+        const uint8_t bb = LIGHT_LED_BB;
         uint16_t chroma[1 + 0xff];
 
         Glare(Light& led);

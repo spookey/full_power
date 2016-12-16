@@ -1,5 +1,5 @@
-#ifndef __init_h_
-#define __init_h_
+#ifndef __init_hpp_
+#define __init_hpp_
 
 #include <Arduino.h>
 
@@ -11,6 +11,10 @@
 #define COVER_REPLAY        240000          // delay in ms before next attempt
 #define COVER_W_PASS        "secret"        // wifi ssid if no config file
 #define COVER_W_SSID        "aether"        // wifi pass if no config file
+
+#define FLASH_CONFIG        "/config_file"  // config filename
+#define FLASH_INILEN        8               // how many values may be stored
+#define FLASH_RASTER        16              // width of key & value in text
 
 #define LIGHT_LED_BB        D1
 #define LIGHT_LED_GG        D2
@@ -29,15 +33,10 @@
 #define SHELL_PRELEN        6               // max prompt width
 #define SHELL_PROMPT        64              // characters to capture
 
-#define STORE_CONFIG        "/config_file"  // config filename
-#define STORE_INILEN        16              // how many values may be stored
-#define STORE_RASTER        16              // width of key & value in text
-
 #define _CHAR_IGNORE        '\0'
 #define _CODE_BACKSP        8
 #define _CODE_ESCAPE        27
 #define _CODE_FILLER        32
 #define _CODE_RETURN        13
-#define _INCL_STRING(...)   #__VA_ARGS__
 
 #endif

@@ -1,14 +1,14 @@
-#ifndef _serve_h_
-#define _serve_h_
+#ifndef _serve_hpp_
+#define _serve_hpp_
 
 #include <ESP8266WebServer.h>
 
-#include <_init.h>
-#include <cable.h>
-#include <cover.h>
-#include <light.h>
-#include <power.h>
-#include <shell.h>
+#include <_init.hpp>
+#include <cable.hpp>
+#include <cover.hpp>
+#include <light.hpp>
+#include <power.hpp>
+#include <shell.hpp>
 
 class Serve {
 public:
@@ -29,14 +29,13 @@ private:
 
     struct Json {
         Cable& txt;
-        bool verbose = false;
+        const bool verbose;
         String store = "";
 
-        Json(Cable& txt);
+        Json(Cable& txt, bool verbose=false);
         void add(String key, String val, bool raw=false);
         void add(String key, int val) { this->add(key, String(val), true); }
         String show(void);
-
     };
 
     String index(void);
@@ -49,10 +48,10 @@ private:
         Index(Serve& web);
     protected:
         Serve& web;
-        String _index = "/";
-        String _light = "/light/";
-        String _power = "/power/";
-        String _stats = "/stats";
+        const String _index = "/";
+        const String _light = "/light/";
+        const String _power = "/power/";
+        const String _stats = "/stats";
     public:
         bool canHandle(HTTPMethod meth, String req);
         bool handle(ESP8266WebServer& srv, HTTPMethod meth, String req);
@@ -60,7 +59,6 @@ private:
     };
 
     uint8_t cmd_stats(String text);
-
 };
 
 #endif

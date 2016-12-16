@@ -1,7 +1,10 @@
-#include "power.h"
+#include "power.hpp"
 
-Power::Power (Cable& txt, Shell& exe, Store& ini)
+Power::Power (Cable& txt, Shell& exe, Flash& ini)
 : txt(txt), exe(exe), ini(ini) {}
+
+Power::FullPower::FullPower(uint8_t hi, uint8_t lo, uint16_t sndlen)
+: hi(hi), lo(lo), sndlen(sndlen) {}
 
 void Power::setup(void) {
     pinMode(this->pin, OUTPUT); digitalWrite(this->pin, LOW);
@@ -11,10 +14,9 @@ void Power::setup(void) {
     this->exe.add(this, &Power::cmd_sock, "sock", "list sockets");
 }
 
-void Power::burst(FullPower power) {
-    digitalWrite(this->pin, HIGH); delayMicroseconds(power.hi * this->sndlen);
-    digitalWrite(this->pin, LOW);  delayMicroseconds(power.lo * this->sndlen);
-    this->txt.text(".", false);
+void Power::FullPower::burst(uint8_t pin) {
+    digitalWrite(pin, HIGH); delayMicroseconds(this->hi * this->sndlen);
+    digitalWrite(pin, LOW);  delayMicroseconds(this->lo * this->sndlen);
 }
 
 void Power::send(const char* word) {
@@ -31,12 +33,14 @@ void Power::send(const char* word) {
     }
     for (uint8_t _ = 0; _ < this->repeat; _++) {
         for (int16_t len = length-1; len >= 0; len--) {
-            if (code & (1L << len)) { this->burst(this->_one); }
-            else { this->burst(this->_zer); }
+            if (code & (1L << len)) {
+                this->_one.burst(this->pin); this->txt.text("+", false);
+            } else {
+                this->_zer.burst(this->pin); this->txt.text("-", false);
+            }
         }
-        this->burst(this->_syn);
+        this->_syn.burst(this->pin); this->txt.text("", true);
     }
-    this->txt.text(" . . .", true);
 }
 
 void Power::full(const char* address, bool power) {
@@ -55,7 +59,7 @@ void Power::full(const char* address, bool power) {
 
 String Power::key(uint8_t num) {
     if (num >= POWER_SWITCH) { return ""; }
-    char res[10]; sprintf(res, "power_%03d", num);
+    static char res[10]; sprintf(res, "power_%03d", num);
     return String(res);
 }
 String Power::address(uint8_t num, bool brief) {

@@ -1,6 +1,6 @@
-#include "cover.h"
+#include "cover.hpp"
 
-Cover::Cover(Cable& txt, Shell& exe, Store& ini)
+Cover::Cover(Cable& txt, Shell& exe, Flash& ini)
 : txt(txt), exe(exe), ini(ini) {}
 
 void Cover::setup(void) {
@@ -47,8 +47,8 @@ bool Cover::hangup(void) {
     this->txt.log("cover", "hangup");
     this->txt.llg("connected", "hang up..");
     WiFi.disconnect(true); delay(1024);
-    if (WiFi.isConnected()) { return false; } else { this->hangups++; }
-    return true;
+    this->hangups++;
+    return (!WiFi.isConnected());
 }
 
 bool Cover::apply(void) {
@@ -63,7 +63,8 @@ bool Cover::apply(void) {
     WiFi.hostname(hostname);
     WiFi.setAutoReconnect(true);
     WiFi.begin(wifissid.c_str(), wifipass.c_str());
-    if (!this->check(false)) { return false; } else { this->dialups++; }
+    this->dialups++;
+    if (!this->check(false)) { return false; }
     this->status();
     if (MDNS.begin(hostname.c_str(), WiFi.localIP())) {
         this->txt.llg("mDNS", "started");
@@ -79,8 +80,9 @@ void Cover::status(void) {
     this->txt.llg("hangups", String(this->hangups));
     if (!WiFi.isConnected()) {
         this->txt.llg("status", "disconnected!"); return;
+    } else {
+        this->txt.llg("status", "connected!");
     }
-    this->txt.llg("status", "connected!");
     this->txt.llg("ssid", WiFi.SSID());
     this->txt.llg("bssid", WiFi.BSSIDstr());
     this->txt.llg("mac", WiFi.macAddress());
@@ -97,7 +99,7 @@ void Cover::lookup(void) {
     if (!WiFi.isConnected()) {
         this->txt.llg("status", "disconnected!"); return;
     }
-    int query = MDNS.queryService("http", "tcp");
+    const int query = MDNS.queryService("http", "tcp");
     if (!query) { this->txt.llg("no results", "sorry"); return; }
     this->txt.llg("results", String(query));
     for (uint16_t idx = 0; idx < query; idx++) {
@@ -116,8 +118,8 @@ void Cover::loop(void) {
         return;
     }
     if (this->check(true)) { this->repeat = COVER_REPEAT; return; }
-    this->replay = millis();
-    this->repeat--; this->apply();
+    this->replay = millis(); this->repeat--;
+    this->apply();
 }
 
 uint8_t Cover::cmd_dialup(String _) {

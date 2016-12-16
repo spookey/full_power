@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "shell.hpp"
 
 Shell::Shell(Cable& txt)
 : txt(txt) {}
@@ -33,9 +33,10 @@ void Shell::launch(String line) {
             arguments = line.substring(1 + progname.length(), line.length());
             arguments.trim();
             code = this->items[idx].call(arguments);
-            if (code == 0) { return; }
-            this->txt.log("shell", this->txt.join("\'", line, "\'"));
-            this->txt.llg("error", String(code, DEC));
+            if (code != 0) {
+                this->txt.log("shell", this->txt.join("\'", line, "\'"));
+                this->txt.llg("error", String(code, DEC));
+            }
             return;
         }
     }

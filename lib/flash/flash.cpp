@@ -1,21 +1,21 @@
-#include "store.h"
+#include "flash.hpp"
 
-Store::Store(Cable& txt, Shell& exe)
+Flash::Flash(Cable& txt, Shell& exe)
 : txt(txt), exe(exe) {}
 
-void Store::setup(void) {
+void Flash::setup(void) {
     if (!SPIFFS.begin()) { this->txt.sos("flash error", true); }
     this->load();
-    this->exe.add(this, &Store::cmd_confdrop, "cdrop", "drop config file");
-    this->exe.add(this, &Store::cmd_confdump, "cdump", "config -> file");
-    this->exe.add(this, &Store::cmd_confload, "cload", "file -> config");
-    this->exe.add(this, &Store::cmd_confshow, "cshow", "show config file");
-    this->exe.add(this, &Store::cmd_conf, "conf", "config utility");
+    this->exe.add(this, &Flash::cmd_confdrop, "cdrop", "drop config file");
+    this->exe.add(this, &Flash::cmd_confdump, "cdump", "config -> file");
+    this->exe.add(this, &Flash::cmd_confload, "cload", "file -> config");
+    this->exe.add(this, &Flash::cmd_confshow, "cshow", "show config file");
+    this->exe.add(this, &Flash::cmd_conf, "conf", "config utility");
 }
 
-bool Store::dump(bool action) {
+bool Flash::dump(bool action) {
     uint32_t size; String conf;
-    this->txt.log("store", "dump");
+    this->txt.log("flash", "dump");
     if (action) {
         conf = this->pickle();
         size = conf.length();
@@ -37,13 +37,13 @@ bool Store::dump(bool action) {
     return true;
 }
 
-String Store::pickle(Blob data) {
+String Flash::pickle(Blob data) {
     return this->txt.join(
-        this->txt.pad(data.key, false, STORE_RASTER, ' ', '%'),
-        this->txt.pad(data.val, true, STORE_RASTER, ' ', '%')
+        this->txt.pad(data.key, false, FLASH_RASTER, ' ', '%'),
+        this->txt.pad(data.val, true, FLASH_RASTER, ' ', '%')
     );
 }
-String Store::pickle() {
+String Flash::pickle() {
     String conf = this->txt.join("# created - ", String(millis()));
     for (uint8_t idx = 0; idx < this->index; idx++) {
         conf = this->txt.join(conf, "\n", this->pickle(this->items[idx]));
@@ -52,9 +52,9 @@ String Store::pickle() {
     return conf;
 }
 
-bool Store::load(bool action) {
+bool Flash::load(bool action) {
     String line;
-    this->txt.log("store", "load");
+    this->txt.log("flash", "load");
     this->txt.llg("filename", this->filename);
     if (!SPIFFS.exists(this->filename)) {
         this->txt.llg("does not exist", "abort"); return false;
@@ -74,18 +74,18 @@ bool Store::load(bool action) {
     file.close();
     return true;
 }
-bool Store::unpickle(String line) {
+bool Flash::unpickle(String line) {
     String key, val; line.trim();
     const uint32_t len = line.length();
     if(!len) { this->txt.text("[empty]", true); return false; }
     if (line.startsWith("#")) {
         this->txt.text("[comment]", true); return false;
     }
-    if(len < (2 * STORE_RASTER)) {
+    if(len < (2 * FLASH_RASTER)) {
         this->txt.text("[too short]", true); return false;
     }
-    key = line.substring(0, STORE_RASTER);
-    val = line.substring(1 + STORE_RASTER, line.length());
+    key = line.substring(0, FLASH_RASTER);
+    val = line.substring(1 + FLASH_RASTER, line.length());
     key.trim(); val.trim();
     if(!key.length() || !val.length()) {
         this->txt.text("[no pair]", true); return false;
@@ -94,17 +94,18 @@ bool Store::unpickle(String line) {
     return this->add(key, val);
 }
 
-bool Store::add(String key, String val) {
-    key.trim(); if (!key.length()) { return false; }
+bool Flash::add(String key, String val) {
+    key.trim();
+    if (!key.length()) { return false; }
     if (this->set(key, val)) { return true; }
-    if (this->index < STORE_INILEN) {
+    if (this->index < FLASH_INILEN) {
         this->items[this->index] = Blob({key, val});
         this->index++;
         return true;
     }
     return false;
 }
-bool Store::set(String key, String val) {
+bool Flash::set(String key, String val) {
     for (uint8_t idx = 0; idx < this->index; idx++) {
         if (this->items[idx].key == key) {
             this->items[idx].val = val;
@@ -113,33 +114,35 @@ bool Store::set(String key, String val) {
     }
     return false;
 }
-String Store::get(String key, String fallback, bool create) {
+String Flash::get(String key, String fallback, bool create) {
     for (uint8_t idx = 0; idx < this->index; idx++) {
         if (this->items[idx].key == key) {
             return this->items[idx].val;
         }
     }
-    if (create) { if (!this->add(key, fallback)) { return ""; }}
+    if (create) {
+        if (!this->add(key, fallback)) { return ""; }
+    }
     return fallback;
 }
 
-uint8_t Store::cmd_confdump(String _) {
-    this->txt.log("store", "conf dump");
+uint8_t Flash::cmd_confdump(String _) {
+    this->txt.log("flash", "conf dump");
     return (this->dump() ? 0 : 1);
 }
-uint8_t Store::cmd_confdrop(String _) {
-    this->txt.log("store", "conf drop");
+uint8_t Flash::cmd_confdrop(String _) {
+    this->txt.log("flash", "conf drop");
     return (this->dump(false) ? 0 : 1);
 }
-uint8_t Store::cmd_confload(String _) {
-    this->txt.log("store", "conf load");
+uint8_t Flash::cmd_confload(String _) {
+    this->txt.log("flash", "conf load");
     return (this->load() ? 0 : 1);
 }
-uint8_t Store::cmd_confshow(String _) {
-    this->txt.log("store", "conf show");
+uint8_t Flash::cmd_confshow(String _) {
+    this->txt.log("flash", "conf show");
     return (this->load(false) ? 0 : 1);
 }
-uint8_t Store::cmd_conf(String text) {
+uint8_t Flash::cmd_conf(String text) {
     uint8_t len = text.length();
     String key, val;
 
@@ -152,20 +155,20 @@ uint8_t Store::cmd_conf(String text) {
     }
 
     if (val.length() && key.length()) {
-        this->txt.log("store", "conf set");
+        this->txt.log("flash", "conf set");
         this->txt.llg(key, val);
         if (!this->set(key, val)) { return 1; }
         this->txt.llg("state", "ok");
     } else if (len) {
-        this->txt.log("store", "conf get");
+        this->txt.log("flash", "conf get");
         this->txt.llg(text, this->get(text, "-"));
     } else {
-        this->txt.log("store", "conf all");
+        this->txt.log("flash", "conf all");
         for (uint8_t idx = 0; idx < this->index; idx++) {
             this->txt.llg(this->items[idx].key, this->items[idx].val);
         }
         this->txt.llg("items", String(this->index));
-        this->txt.llg("free", String(STORE_INILEN - this->index));
+        this->txt.llg("free", String(FLASH_INILEN - this->index));
     }
     return 0;
 }

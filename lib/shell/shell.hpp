@@ -1,8 +1,8 @@
-#ifndef _shell_h_
-#define _shell_h_
+#ifndef _shell_hpp_
+#define _shell_hpp_
 
-#include <_init.h>
-#include <cable.h>
+#include <_init.hpp>
+#include <cable.hpp>
 
 class Shell {
 public:
@@ -11,8 +11,8 @@ public:
 
 protected:
     Cable& txt;
-    uint8_t c_idx = 0; /* registered command counter */
-    uint8_t p_idx = 0; /* prompt input counter */
+    uint8_t c_idx = 0;      /* registered command index */
+    uint8_t p_idx = 0;      /* prompt input index */
     uint16_t launched = 0;
 
 private:

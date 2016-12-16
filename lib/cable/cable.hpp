@@ -1,7 +1,7 @@
-#ifndef _cable_h_
-#define _cable_h_
+#ifndef _cable_hpp_
+#define _cable_hpp_
 
-#include <_init.h>
+#include <_init.hpp>
 
 class Cable {
 public:
@@ -23,7 +23,6 @@ public:
             char fchr=' ', char schr='.');
 
     void sos(String reason, bool forever=true, unsigned long wait=2048);
-    String get_uptime(void);
 
 public:
     String join(String tx_a, String tx_b, String tx_c) {
@@ -52,6 +51,8 @@ public:
     void llg(String name, String tx_a, String tx_b, String tx_c, String tx_d) {
         this->llg(name, this->join(tx_a, tx_b, tx_c, tx_d));
     }
+
+    String get_uptime(void);
 };
 
 #endif

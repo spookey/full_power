@@ -1,4 +1,6 @@
-#include "serve.h"
+#include "serve.hpp"
+
+#define _INCL_STRING(...)   #__VA_ARGS__
 
 const String SERVE_BASIC = String(
 #include "etc/_basic.html"
@@ -13,13 +15,15 @@ const String SERVE_PLUGS = String(
 #include "etc/_plugs.html"
 );
 
+#undef _INCL_STRING
+
 Serve::Serve(Cable& txt, Shell& exe, Cover& net, Light& led, Power& ray)
 : txt(txt), exe(exe), net(net), led(led), ray(ray) {
     this->srv.addHandler(new Index(*this));
 }
 
-Serve::Json::Json(Cable& txt)
-: txt(txt) {}
+Serve::Json::Json(Cable& txt, bool verbose)
+: txt(txt), verbose(verbose) {}
 
 Serve::Index::Index(Serve& web)
 : web(web) {}
@@ -35,9 +39,9 @@ String Serve::Json::show(void) {
 }
 void Serve::Json::add(String key, String val, bool raw) {
     String res = (this->store.length() ? ", " : "");
-    res += this->txt.join("\"", key, "\": ");
-    res += (raw ? val : this->txt.join("\"", val, "\""));
-    this->store += res;
+    res = this->txt.join(res, "\"", key, "\": ");
+    res = this->txt.join(res, (raw ? val : this->txt.join("\"", val, "\"")));
+    this->store = this->txt.join(this->store, res);
     if (this->verbose) { this->txt.llg(key, val); }
 }
 
@@ -46,7 +50,7 @@ String Serve::index(void) {
     for (uint8_t idx = 0; idx < POWER_SWITCH; idx++) {
         pltpl = SERVE_PLUGS;
         pltpl.replace("__plugname__", this->ray.name(idx));
-        plugs += pltpl;
+        plugs = this->txt.join(plugs, pltpl);
     }
     String resp = SERVE_BASIC;
     resp.replace("__style__", SERVE_STYLE);
@@ -80,7 +84,7 @@ String Serve::power(String text, bool full) {
     return resp.show();
 }
 String Serve::stats(void) {
-    Json resp = Json(this->txt); resp.verbose = true;
+    Json resp = Json(this->txt, true);
     resp.add("color", this->led.get_color());
     resp.add("dialups", this->net.get_dialups());
     resp.add("hangups", this->net.get_hangups());
@@ -123,14 +127,14 @@ bool Serve::Index::handle(ESP8266WebServer &srv, HTTPMethod meth, String req) {
     }
     if (req.startsWith(this->_light)) {
         String part = req.substring(this->_light.length(), req.length());
-        bool fade = part.startsWith("fade");
+        const bool fade = part.startsWith("fade");
         String text = part.substring((fade ?  5 : 6), part.length());
         srv.send(200, "application/json", this->web.light(text, fade));
         return true;
     }
     if (req.startsWith(this->_power)) {
         String part = req.substring(this->_power.length(), req.length());
-        bool full = part.startsWith("full");
+        const bool full = part.startsWith("full");
         String text = part.substring(5, part.length());
         if (text.length()) {
             srv.send(200, "application/json", this->web.power(text, full));
@@ -151,7 +155,7 @@ uint8_t Serve::cmd_stats(String text) {
         this->txt.llg("boot version", String(ESP.getBootVersion()));
         this->txt.llg("free heap", String(ESP.getFreeHeap()));
         this->txt.llg("free sketch", String(ESP.getFreeSketchSpace()));
-        this->txt.llg("sketch", String(ESP.getSketchSize()));
+        this->txt.llg("sketch size", String(ESP.getSketchSize()));
         this->txt.llg("reset raeson", ESP.getResetReason());
     }
     this->stats();

@@ -1,8 +1,8 @@
-#include "main.h"
+#include "main.hpp"
 
 Cable txt = Cable();
 Shell exe = Shell(txt);
-Store ini = Store(txt, exe);
+Flash ini = Flash(txt, exe);
 Cover net = Cover(txt, exe, ini);
 Light led = Light(txt, exe);
 Power ray = Power(txt, exe, ini);

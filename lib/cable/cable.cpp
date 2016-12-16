@@ -1,4 +1,4 @@
-#include "cable.h"
+#include "cable.hpp"
 
 void Cable::setup(void) {
     Serial.begin(CABLE_BAUDRT, CABLE_CONFIG);
@@ -7,7 +7,7 @@ void Cable::setup(void) {
 }
 
 char Cable::collect(void) {
-    int16_t val = Serial.read();
+    const int16_t val = Serial.read();
     if (val < 0) { return _CHAR_IGNORE; }
     return (char) val;
 }
@@ -66,7 +66,7 @@ String Cable::get_uptime(void) {
     sec = sec - (min * 60);
     min = min - (hrs * 60);
     hrs = hrs - (day * 24);
-    char res[16];
+    static char res[16];
     if (day >= 1) { sprintf(res, "%dd %02d:%02d:%02d", day, hrs, min, sec); }
     else { sprintf(res, "%02d:%02d:%02d", hrs, min, sec); }
     return String(res);

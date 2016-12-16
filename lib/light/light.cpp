@@ -1,4 +1,4 @@
-#include "light.h"
+#include "light.hpp"
 
 Light::Light(Cable& txt, Shell& exe)
 : txt(txt), exe(exe), glare(*this), color() {}
@@ -22,7 +22,6 @@ uint16_t Light::Glare::luminance(uint8_t val) {
 }
 
 void Light::Glare::generate(void) {
-    uint16_t val;
     uint8_t idx = 0x00;
     do {
         this->chroma[0xff - idx] = this->luminance(idx);
@@ -65,10 +64,8 @@ Light::Color Light::parse(String text) {
     } else if (text.startsWith("0x") || text.startsWith("0X")) {
         base = 16;
     }
-    const char* value = text.c_str();
-    return this->parse(strtoul(value, 0, base));
+    return this->parse(strtoul(text.c_str(), nullptr, base));
 }
-Light::Color Light::some(void) { return this->parse(RANDOM_REG32); }
 
 void Light::fade(Color col, unsigned long pause) {
     this->txt.log("light", "fade");

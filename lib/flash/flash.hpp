@@ -1,26 +1,26 @@
-#ifndef _flash_h_
-#define _flash_h_
+#ifndef _flash_hpp_
+#define _flash_hpp_
 
 #include <FS.h>
 
-#include <_init.h>
-#include <cable.h>
-#include <shell.h>
+#include <_init.hpp>
+#include <cable.hpp>
+#include <shell.hpp>
 
-class Store {
+class Flash {
 public:
-    Store(Cable& txt, Shell& exe);
+    Flash(Cable& txt, Shell& exe);
     void setup(void);
 
 protected:
     Cable& txt;
     Shell& exe;
-    String filename = STORE_CONFIG;
+    const String filename = FLASH_CONFIG;
 
 private:
-    struct Blob {String key; String val; };
+    struct Blob { String key; String val; };
     uint8_t index = 0;
-    Blob* items = new Blob[STORE_INILEN];
+    Blob* items = new Blob[FLASH_INILEN];
 
     bool dump(bool action=true);
     String pickle(Blob data);
