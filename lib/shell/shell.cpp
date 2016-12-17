@@ -15,13 +15,13 @@ bool Shell::add(Command& cmd) {
 }
 void Shell::help(void) {
     this->txt.log("shell", "commands");
+    this->txt.llg("items", String(this->c_idx));
+    this->txt.llg("free", String(SHELL_CMDLEN - this->c_idx));
+    this->txt.llg(":", "#", String(this->launched), " ::");
     for (uint8_t idx = 0; idx < this->c_idx; idx++) {
         this->txt.llg(this->items[idx].name, this->items[idx].help);
     }
     this->txt.llg("anything else", "this help");
-    this->txt.llg(":", "#", String(this->launched), " ::");
-    this->txt.llg("items", String(this->c_idx));
-    this->txt.llg("free", String(SHELL_CMDLEN - this->c_idx));
 }
 void Shell::launch(String line) {
     String progname, arguments;

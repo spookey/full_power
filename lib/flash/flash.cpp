@@ -164,11 +164,12 @@ uint8_t Flash::cmd_conf(String text) {
         this->txt.llg(text, this->get(text, "-"));
     } else {
         this->txt.log("flash", "conf all");
+        this->txt.llg("items", String(this->index));
+        this->txt.llg("free", String(FLASH_INILEN - this->index));
+        this->txt.llg(":", "--", " ::");
         for (uint8_t idx = 0; idx < this->index; idx++) {
             this->txt.llg(this->items[idx].key, this->items[idx].val);
         }
-        this->txt.llg("items", String(this->index));
-        this->txt.llg("free", String(FLASH_INILEN - this->index));
     }
     return 0;
 }
