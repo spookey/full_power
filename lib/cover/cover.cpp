@@ -52,7 +52,9 @@ bool Cover::hangup(void) {
 }
 
 bool Cover::apply(void) {
-    String hostname = this->ini.get("hostname", COVER_H_NAME, true);
+    String hostname = this->ini.get("hostname", this->txt.join(
+        COVER_H_NAME, "-", String(ESP.getChipId())
+    ), true);
     String wifissid = this->ini.get("wifissid", COVER_W_SSID, true);
     String wifipass = this->ini.get("wifipass", COVER_W_PASS, true);
     this->hangup();
