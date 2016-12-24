@@ -30,6 +30,7 @@ Serve::Index::Index(Serve& web)
 
 void Serve::setup(void) {
     this->srv.begin();
+    this->exe.add(this, &Serve::cmd_restart, "restart", "restart system");
     this->exe.add(this, &Serve::cmd_stats, "stats", "system statistics");
 }
 void Serve::loop(void) { this->srv.handleClient(); }

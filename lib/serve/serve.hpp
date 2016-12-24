@@ -58,6 +58,7 @@ private:
         bool canUpload(String _) { return false; }
     };
 
+    uint8_t cmd_restart(String _) { ESP.restart(); return 0; }
     uint8_t cmd_stats(String text);
 };
 

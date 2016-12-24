@@ -1,11 +1,11 @@
 language: python
 python:
-    - "2.7"
+    - '2.7'
 
 sudo: off
 cache:
     directories:
-        - "~/.platformio"
+        - $HOME/.platformio
 
 install:
     - pip install -U platformio
