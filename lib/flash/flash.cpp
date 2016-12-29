@@ -68,7 +68,7 @@ bool Flash::load(bool action) {
     while (file.available()) {
         line = file.readStringUntil('\n');
         if (action) {
-            this->txt.llg((this->unpickle(line) ? "ok" : "ignored"), line);
+            this->txt.llg("->", (this->unpickle(line) ? "ok" : "ignored"));
         } else { this->txt.text(line, true); }
     }
     file.close();
@@ -77,20 +77,13 @@ bool Flash::load(bool action) {
 bool Flash::unpickle(String line) {
     String key, val; line.trim();
     const uint32_t len = line.length();
-    if(!len) { this->txt.text("[empty]", true); return false; }
-    if (line.startsWith("#")) {
-        this->txt.text("[comment]", true); return false;
-    }
-    if(len < (2 * FLASH_RASTER)) {
-        this->txt.text("[too short]", true); return false;
-    }
+    if(!len) { return false; }
+    if (line.startsWith("#")) { return false; }
+    if(len < (2 * FLASH_RASTER)) { return false; }
     key = line.substring(0, FLASH_RASTER);
     val = line.substring(1 + FLASH_RASTER, line.length());
     key.trim(); val.trim();
-    if(!key.length() || !val.length()) {
-        this->txt.text("[no pair]", true); return false;
-    }
-    this->txt.text("[\\o/]", true);
+    if(!key.length() || !val.length()) { return false; }
     return this->add(key, val);
 }
 
