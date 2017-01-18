@@ -13,7 +13,7 @@
 #define COVER_W_SSID        "aether"        // wifi pass if no config file
 
 #define FLASH_CONFIG        "/config_file"  // config filename
-#define FLASH_INILEN        8               // how many values may be stored
+#define FLASH_INILEN        16              // how many values may be stored
 #define FLASH_RASTER        16              // width of key & value in text
 
 #define LIGHT_LED_BB        D1
@@ -22,7 +22,7 @@
 
 #define POWER_FAMILY        "01101"
 #define POWER_REPEAT        10
-#define POWER_SWITCH        3               // how many switches to reserve
+#define POWER_SWITCH        12              // how many switches to reserve
 #define POWER_TX_PIN        D5
 
 #define SERVE_HARBOR        80              // the port :)

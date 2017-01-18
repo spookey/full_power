@@ -1,0 +1,15 @@
+conf hostname z1013
+conf wifissid .
+conf power_family 01101
+conf power_000 00001
+conf power_001 00010
+conf power_002 00100
+conf power_003 01000
+conf power_004 10000
+conf power_005 00110
+conf power_006 01010
+conf power_007 01100
+conf power_008 01110
+conf power_009 10010
+conf power_010 10100
+conf power_011 10110
