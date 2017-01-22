@@ -19,18 +19,7 @@ void Power::FullPower::burst(uint8_t pin) {
     digitalWrite(pin, LOW);  delayMicroseconds(this->lo * this->sndlen);
 }
 
-void Power::send(const char* word) {
-    unsigned long code = 0;
-    uint8_t length = 0;
-    for (const char* w = word; *w; w++) {
-        code <<= 2l;
-        switch(*w) {
-            case '0': break;
-            case 'F': code |= 1L; break;
-            case '1': code |= 3L; break;
-        }
-        length += 2;
-    }
+void Power::send(unsigned long code, int16_t length) {
     for (uint8_t _ = 0; _ < this->repeat; _++) {
         for (int16_t len = length-1; len >= 0; len--) {
             if (code & (1L << len)) {
@@ -43,19 +32,34 @@ void Power::send(const char* word) {
     }
 }
 
-void Power::full(const char* address, bool power) {
+unsigned long Power::code(const char* trip) {
+    unsigned long res = 0;
+    for (const char* t = trip; *t; t++) {
+        res <<= 2l;
+        if (*t == 'F') { res |= 1l; }
+    }
+    return res;
+}
+
+void Power::full(String address, bool power) {
     static char res[13];
     uint8_t pos = 0;
     for (uint8_t idx = 0; idx < 10; idx++) {
-        res[pos++] = (address[idx] == '0') ? 'F' : '0';
+        res[pos++] = (address.charAt(idx) == '0') ? 'F' : '0';
     }
-    res[pos++] = power ? '0' : 'F'; res[pos++] = power ? 'F' : '0';
+    res[pos++] = power ? '0' : 'F';
+    res[pos++] = power ? 'F' : '0';
     res[pos++] = _CHAR_IGNORE;
+
+    unsigned long code = this->code(res);
+
     this->txt.log("power", (power ? "full" : "null"));
     this->txt.llg("address", address);
     this->txt.llg("package", res);
-    this->send(res);
+    this->txt.llg("code", String(code));
+    this->send(code, (pos - 1) * 2);
 }
+
 
 String Power::key(uint8_t num) {
     if (num >= POWER_SWITCH) { return ""; }
@@ -91,10 +95,10 @@ void Power::list(void) {
 
 uint8_t Power::cmd_full(String text) {
     if (!text.length()) { return 1; } String addr = this->look(text);
-    this->full((!addr.length() ? text : addr).c_str(), true); return 0;
+    this->full((!addr.length() ? text : addr), true); return 0;
 }
 uint8_t Power::cmd_null(String text) {
     if (!text.length()) { return 1; } String addr = this->look(text);
-    this->full((!addr.length() ? text : addr).c_str(), false); return 0;
+    this->full((!addr.length() ? text : addr), false); return 0;
 }
 uint8_t Power::cmd_sock(String _) { this->list(); return 0; }
