@@ -7,6 +7,7 @@ SOURCE=${SOURCE-"$CRUMBS/raw"}
 TARGET=${TARGET-"$CRUMBS/etc"}
 DEFINE=${DEFINE-"_INCL_STRING"}
 PRESET=('basic.html' 'funct.js' 'plugs.html' 'style.css')
+PREFIX=${PREFIX-"_"}
 
 
 msg() { echo -e "$(basename "$0")" "|" "$@"; }
@@ -26,7 +27,7 @@ fi
 
 for NAME in "${PRESET[@]}"; do
     src="$SOURCE/$NAME"
-    tgt="$TARGET/_$NAME"
+    tgt="$TARGET/$PREFIX$NAME"
     if [[ $FORCED == false && -e $tgt ]]; then
         msg "skipping" "$NAME" "already present in" "$(basename "$TARGET")"
         continue

@@ -1,5 +1,5 @@
-#ifndef __main_hpp_
-#define __main_hpp_
+#ifndef _main_hpp_
+#define _main_hpp_
 
 #include <_init.hpp>
 #include <cable.hpp>

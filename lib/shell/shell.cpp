@@ -74,7 +74,7 @@ void Shell::_collect(char data) {
 void Shell::_enter(void) {
     String line;
     if (this->p_idx > 0) { line = this->input; line.trim(); }
-    if (!!line.length()) { this->launch(line); }
+    if (line.length() > 0) { this->launch(line); }
     this->_intro();
 }
 

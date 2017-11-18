@@ -4,7 +4,7 @@ Full Power
 
 Welcome to that huge Object-Oriented Arduino Sketch.
 
-It is one elementary part of my home automation setup.
+It is the elementary part of my home automation setup.
 I use it to control my wireless power sockets.
 
 For more information visit the `project description`_.
@@ -19,7 +19,7 @@ Hardware
 - Two normal LEDs (Rx/Tx activity)
 - Four resistors, some wires...
 
-The wiring is rather straightforward.
+The wiring is rather straightforward:
 
 .. image:: etc/schaltplan.png
     :align: center
@@ -27,11 +27,11 @@ The wiring is rather straightforward.
 Features
 ========
 
-While booting, the board loads a config file stored in SPIFFS or it
+While booting, the board loads the configuration stored in SPIFFS or it
 will create one with default settings.
 
-It uses the config, to know wich wifi to join. There it announces
-the included webserver (e.g. ``device.local``) via MDNS.
+It uses the config, to know which wifi to join. There it announces
+the included web server (e.g. ``device.local``) via MDNS.
 
 Visiting that webpage one may control the configured wireless power sockets
 and the included RGB-LED (now with fancy RGB value sliders).
@@ -44,7 +44,7 @@ The included shell waiting on the serial can be used to..
 - show statistics
 - ...
 
-But it is also possible to talk to the api directly, recieving a json response:
+But it is also possible to talk to the api directly, receiving a json response:
 
 * Fade LED to red::
 

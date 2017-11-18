@@ -43,7 +43,7 @@ String Flash::pickle(Blob data) {
         this->txt.pad(data.val, true, FLASH_RASTER, ' ', '%')
     );
 }
-String Flash::pickle() {
+String Flash::pickle(void) {
     String conf = this->txt.join("# created - ", String(millis()));
     for (uint8_t idx = 0; idx < this->index; idx++) {
         conf = this->txt.join(conf, "\n", this->pickle(this->items[idx]));
@@ -81,7 +81,7 @@ bool Flash::unpickle(String line) {
     if (line.startsWith("#")) { return false; }
     if(len < (2 * FLASH_RASTER)) { return false; }
     key = line.substring(0, FLASH_RASTER);
-    val = line.substring(1 + FLASH_RASTER, line.length());
+    val = line.substring(FLASH_RASTER, 1 + line.length());
     key.trim(); val.trim();
     if(!key.length() || !val.length()) { return false; }
     return this->add(key, val);
