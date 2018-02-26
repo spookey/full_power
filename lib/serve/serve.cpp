@@ -19,21 +19,21 @@ const String SERVE_PLUGS = String(
 
 Serve::Serve(Cable& txt, Shell& exe, Cover& net, Light& led, Power& ray)
 : txt(txt), exe(exe), net(net), led(led), ray(ray) {
-    this->srv.addHandler(new Index(*this));
+    this->webserver->addHandler(new Index(*this));
 }
 
 Serve::Json::Json(Cable& txt, bool verbose)
 : txt(txt), verbose(verbose) {}
 
-Serve::Index::Index(Serve& web)
-: web(web) {}
+Serve::Index::Index(Serve& srv)
+: srv(srv) {}
 
 void Serve::setup(void) {
-    this->srv.begin();
+    this->webserver->begin();
     this->exe.add(this, &Serve::cmd_restart, "restart", "restart system");
     this->exe.add(this, &Serve::cmd_stats, "stats", "system statistics");
 }
-void Serve::loop(void) { this->srv.handleClient(); }
+void Serve::loop(void) { this->webserver->handleClient(); }
 
 String Serve::Json::show(void) {
     return this->txt.join("{", this->store, "}");
@@ -103,34 +103,34 @@ bool Serve::Index::canHandle(HTTPMethod meth, String req) {
     if (req == this->_index || req == this->_stats) { return true; }
     if (req.startsWith(this->_light)) {
         return (
-            req.startsWith(this->web.txt.join(this->_light, "fade/")) ||
-            req.startsWith(this->web.txt.join(this->_light, "flash/"))
+            req.startsWith(this->srv.txt.join(this->_light, "fade/")) ||
+            req.startsWith(this->srv.txt.join(this->_light, "flash/"))
         );
     }
     if (req.startsWith(this->_power)) {
         return (
-            req.startsWith(this->web.txt.join(this->_power, "full/")) ||
-            req.startsWith(this->web.txt.join(this->_power, "null/"))
+            req.startsWith(this->srv.txt.join(this->_power, "full/")) ||
+            req.startsWith(this->srv.txt.join(this->_power, "null/"))
         );
     }
     return false;
 }
-bool Serve::Index::handle(ESP8266WebServer &srv, HTTPMethod meth, String req) {
-    this->web.requests++; req.trim();
-    this->web.txt.log("serve", req);
-    this->web.txt.llg("#", String(this->web.requests));
+bool Serve::Index::handle(ESP8266WebServer &webserver, HTTPMethod meth, String req) {
+    this->srv.requests++; req.trim();
+    this->srv.txt.log("serve", req);
+    this->srv.txt.llg("#", String(this->srv.requests));
 
     if (req == this->_stats) {
-        srv.send(200, "application/json", this->web.stats()); return true;
+        webserver.send(200, "application/json", this->srv.stats()); return true;
     }
     if (req == this->_index) {
-        srv.send(200, "text/html", this->web.index()); return true;
+        webserver.send(200, "text/html", this->srv.index()); return true;
     }
     if (req.startsWith(this->_light)) {
         String part = req.substring(this->_light.length(), req.length());
         const bool fade = part.startsWith("fade");
         String text = part.substring((fade ?  5 : 6), part.length());
-        srv.send(200, "application/json", this->web.light(text, fade));
+        webserver.send(200, "application/json", this->srv.light(text, fade));
         return true;
     }
     if (req.startsWith(this->_power)) {
@@ -138,7 +138,7 @@ bool Serve::Index::handle(ESP8266WebServer &srv, HTTPMethod meth, String req) {
         const bool full = part.startsWith("full");
         String text = part.substring(5, part.length());
         if (text.length()) {
-            srv.send(200, "application/json", this->web.power(text, full));
+            webserver.send(200, "application/json", this->srv.power(text, full));
             return true;
         }
     }

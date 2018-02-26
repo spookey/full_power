@@ -25,7 +25,7 @@ protected:
     uint32_t requests = 0;
 
 private:
-    ESP8266WebServer srv = ESP8266WebServer(SERVE_HARBOR);
+    ESP8266WebServer* webserver = new ESP8266WebServer(SERVE_HARBOR);
 
     struct Json {
         Cable& txt;
@@ -45,16 +45,16 @@ private:
 
     class Index : public RequestHandler {
     public:
-        Index(Serve& web);
+        Index(Serve& srv);
     protected:
-        Serve& web;
+        Serve& srv;
         const String _index = "/";
         const String _light = "/light/";
         const String _power = "/power/";
         const String _stats = "/stats";
     public:
         bool canHandle(HTTPMethod meth, String req);
-        bool handle(ESP8266WebServer& srv, HTTPMethod meth, String req);
+        bool handle(ESP8266WebServer& webserver, HTTPMethod meth, String req);
         bool canUpload(String _) { return false; }
     };
 
