@@ -4,7 +4,7 @@ ROOT_DIR=$(cd "$(dirname "$0")" || exit 1; pwd)
 
 CRUMBS="$ROOT_DIR/lib/serve"
 SOURCE=${SOURCE-"$CRUMBS/raw"}
-TARGET=${TARGET-"$CRUMBS/etc"}
+TARGET=${TARGET-"$CRUMBS/inc"}
 DEFINE=${DEFINE-"_INCL_STRING"}
 PRESET=('basic.html' 'funct.js' 'plugs.html' 'style.css')
 PREFIX=${PREFIX-"_"}
@@ -36,7 +36,7 @@ for NAME in "${PRESET[@]}"; do
         msg "file" "$NAME" "not present in" "$(basename "$SOURCE")"
         continue
     fi
-    echo -e "$DEFINE(\n$(<"$src")\n)" > "$tgt"
+    printf '%s(\n%s\n)\n' "$DEFINE" "$(<"$src")" > "$tgt"
     msg "file" "$NAME" "done"
 done
 

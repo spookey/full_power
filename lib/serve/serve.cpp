@@ -3,16 +3,16 @@
 #define _INCL_STRING(...)   #__VA_ARGS__
 
 const String SERVE_BASIC = String(
-#include "etc/_basic.html"
+#include "inc/_basic.html"
 );
 const String SERVE_FUNCT = String(
-#include "etc/_funct.js"
+#include "inc/_funct.js"
 );
 const String SERVE_STYLE = String(
-#include "etc/_style.css"
+#include "inc/_style.css"
 );
 const String SERVE_PLUGS = String(
-#include "etc/_plugs.html"
+#include "inc/_plugs.html"
 );
 
 #undef _INCL_STRING

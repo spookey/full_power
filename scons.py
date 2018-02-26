@@ -1,3 +1,4 @@
 from SCons.Script import DefaultEnvironment
-env = DefaultEnvironment()
-env.Execute('$PROJECT_DIR/pre.sh -f')
+
+ENV = DefaultEnvironment()
+ENV.Execute('$PROJECT_DIR/pre.sh -f')
