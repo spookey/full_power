@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 
-#define CABLE_BAUDRT        115200
-#define CABLE_CONFIG        SERIAL_8N1
+#define CABLE_BAUDRT        115200          // serial speed
+#define CABLE_CONFIG        SERIAL_8N1      // serial mode
 
 #define COVER_H_NAME        "device"        // host name if no config file
 #define COVER_REPEAT        4               // connection attempts
@@ -20,8 +20,8 @@
 #define LIGHT_LED_GG        D2
 #define LIGHT_LED_RR        D3
 
-#define POWER_FAMILY        "01101"
-#define POWER_REPEAT        10
+#define POWER_FAMILY        "01101"         // prefix for socket addresses
+#define POWER_REPEAT        10              // how often a command is repeated
 #define POWER_SWITCH        12              // how many switches to reserve
 #define POWER_TX_PIN        D5
 
@@ -29,14 +29,13 @@
 #define SERVE_UPDATE        120000          // background refresh each ms
 
 #define SHELL_CMDLEN        16              // how many commands may be added
-#define SHELL_PREFIX        "C:\\>"
-#define SHELL_PRELEN        6               // max prompt width
+#define SHELL_PREFIX        "C:\\>"         // commandline prefix
 #define SHELL_PROMPT        64              // characters to capture
 
-#define _CHAR_IGNORE        '\0'
-#define _CODE_BACKSP        8
-#define _CODE_ESCAPE        27
-#define _CODE_FILLER        32
-#define _CODE_RETURN        13
+#define _CHAR_IGNORE        '\0'            // character repr nullbyte
+#define _CODE_BACKSP        8               // character code backspace
+#define _CODE_ESCAPE        27              // character code escape key
+#define _CODE_FILLER        32              // character code space
+#define _CODE_RETURN        13              // character code return key
 
 #endif

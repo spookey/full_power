@@ -44,9 +44,10 @@ void Shell::launch(String line) {
 }
 
 void Shell::_intro(void) {
+    String prefix = SHELL_PREFIX;
     this->p_idx = 0;
     this->txt.text(this->txt.pad(
-        this->txt.join("\n", SHELL_PREFIX), false, SHELL_PRELEN, ' ', '%'
+        this->txt.join("\n\r", prefix), false, 3 + prefix.length(), ' ', '%'
     ), false);
 }
 void Shell::_remove(uint8_t num) {
